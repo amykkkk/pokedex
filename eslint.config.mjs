@@ -13,4 +13,14 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
+const { defineConfig } = require("eslint/config");
+module.exports = defineConfig([
+  {
+    rules: {
+      semi: "error",
+      "prefer-const": "error",
+    },
+  },
+]);
+
 export default eslintConfig;
