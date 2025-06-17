@@ -1,34 +1,39 @@
 "use client";
 
-import PokemonCard from "@/components/PokemonCard";
 import { useEffect, useState } from "react";
+import { fetchAllPokemon, fetchPokemonByType } from "@/lib/api";
+import PokemonCard from "@/components/PokemonCard";
+import TypeFilter from "@/components/TypeFilter";
 
 export default function Home() {
   const [pokemonList, setPokemonList] = useState([]);
+  const [type, setType] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
-      const data = await res.json();
+      const data = type
+        ? await fetchPokemonByType(type)
+        : await fetchAllPokemon();
 
-      const list = data.results.map((pokemon: any, i: number) => ({
-        name: pokemon.name,
-        image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-          i + 1
-        }.png`,
-      }));
-
-      setPokemonList(list);
+      setPokemonList(data);
     };
 
     fetchData();
-  }, []);
+  }, [type]);
 
   return (
-    <main className="grid grid-cols-2 gap-6 p-6 sm:grid-cols-3 md:grid-cols-4">
-      {pokemonList.map((p) => (
-        <PokemonCard key={p.name} name={p.name} image={p.image} />
-      ))}
+    <main className="p-6">
+      <h1 className="mb-4 text-2xl font-bold">🔥 Search</h1>
+      <TypeFilter onSelect={setType} />
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+        {pokemonList.map((p: any) => (
+          <PokemonCard
+            key={p.name}
+            name={p.name}
+            image={`https://img.pokemondb.net/sprites/home/normal/${p.name}.png`}
+          />
+        ))}
+      </div>
     </main>
   );
 }
