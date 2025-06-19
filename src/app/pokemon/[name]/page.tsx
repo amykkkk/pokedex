@@ -1,19 +1,22 @@
-import { fetchPokemonDetail } from "@/lib/api";
+import PokemonCard from "@/components/PokemonCard";
+import { fetchPokeEvoChain, fetchPokemonDetail } from "@/lib/api";
 
 export default async function PokemonDetail({
   params,
 }: {
   params: { name: string };
 }) {
-  const data = await fetchPokemonDetail(params.name);
+  const { name } = await params;
+  const data = await fetchPokemonDetail(name);
+  const evolutions = await fetchPokeEvoChain(name);
 
   return (
-    <main className="mx-auto max-w-xl p-6">
+    <main className="p-6">
       <h1 className="mb-4 text-3xl font-bold capitalize">{data.name}</h1>
       <img
         src={data.sprites.front_default}
         alt={data.name}
-        className="mx-auto h-32 w-32"
+        className="mb-4 h-64 w-64 object-contain"
       />
 
       <div className="mt-6 space-y-2 text-lg">
@@ -37,6 +40,19 @@ export default async function PokemonDetail({
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <h2 className="mb-2 text-xl font-semibold">진화 정보</h2>
+        <div className="flex items-center gap-4">
+          {evolutions.map((evo) => (
+            <PokemonCard
+              key={evo}
+              name={evo}
+              image={`https://img.pokemondb.net/sprites/home/normal/${evo}.png`}
+            />
+          ))}
         </div>
       </div>
     </main>

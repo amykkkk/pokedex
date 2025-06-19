@@ -21,3 +21,28 @@ export const fetchPokemonAllTypes = async () => {
   const data = await res.json();
   return data.results;
 };
+
+export const fetchPokeEvoChain = async (name: string) => {
+  const speciesRes = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${name}`,
+  )
+    .then((res) => res.json())
+    .then((data) => data.evolution_chain.url);
+
+  const evoRes = await fetch(speciesRes).then((res) => res.json());
+
+  let evoChain: string[] = [];
+
+  const evoNames = (obj: any) => {
+    if (!obj) return evoChain;
+    evoChain.push(obj.species.name);
+
+    if (obj.evolves_to && obj.evolves_to.length > 0) {
+      return evoNames(obj.evolves_to[0]);
+    }
+    return evoChain;
+  };
+  evoNames(evoRes.chain);
+
+  return evoChain;
+};
