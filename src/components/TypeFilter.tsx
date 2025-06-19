@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchPokemonAllTypes } from "@/lib/api";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function TypeFilter({
@@ -10,6 +11,10 @@ export default function TypeFilter({
 }) {
   const [types, setTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const t = searchParams.get("t");
+  const q = searchParams.get("q") || "";
+  const router = useRouter();
 
   useEffect(() => {
     const loadTypes = async () => {
@@ -30,12 +35,18 @@ export default function TypeFilter({
     loadTypes();
   }, []);
 
+  const handleType = (type: string) => {
+    if (!type || t === type) return;
+    router.push(`?t=${type}&q=${q}`);
+    onSelect(type === "all" ? "" : type);
+  };
+
   if (loading) return <p>타입 로딩 중입니다...🌀</p>;
 
   return (
     <div className="mb-4 flex flex-wrap gap-2">
       <button
-        onClick={() => onSelect("")}
+        onClick={() => handleType("all")}
         className="rounded bg-gray-300 px-2 py-1 transition hover:bg-gray-400"
       >
         전체 보기
@@ -44,8 +55,8 @@ export default function TypeFilter({
       {types.map((type) => (
         <button
           key={type}
-          onClick={() => onSelect(type)}
-          className={`rounded-full bg-blue-300 px-3 py-1 text-sm text-white transition hover:bg-blue-400`}
+          onClick={() => handleType(type)}
+          className={`rounded-full px-3 py-1 text-sm text-white transition hover:bg-blue-400 ${t === type ? "bg-red-500" : "bg-blue-300"}`}
         >
           {type.toUpperCase()}
         </button>
