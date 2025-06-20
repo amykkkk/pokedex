@@ -6,6 +6,7 @@ import PokemonCard from "@/components/PokemonCard";
 import TypeFilter from "@/components/TypeFilter";
 import Search from "@/components/SearchBox";
 import { useSearchParams } from "next/navigation";
+import Pagination from "@/components/Pagination";
 
 export default function Home() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -15,6 +16,8 @@ export default function Home() {
 
   const searchParams = useSearchParams();
   const search = searchParams.get("q") || "";
+  const curPage = Number(searchParams.get("p")) || 1;
+  const ITEMS_PER_PAGE = 20;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,9 +25,10 @@ export default function Home() {
       setError("");
 
       try {
+        const paginated = (curPage - 1) * ITEMS_PER_PAGE;
         const data = type
           ? await fetchPokemonByType(type)
-          : await fetchAllPokemon();
+          : await fetchAllPokemon(paginated, ITEMS_PER_PAGE);
 
         setPokemonList(data);
       } catch (err) {
@@ -35,7 +39,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [type]);
+  }, [type, curPage]);
 
   const filtered = pokemonList.filter((p: any) =>
     p.name.toLowerCase().includes(search.toLowerCase()),
@@ -63,6 +67,8 @@ export default function Home() {
           ))}
         </div>
       )}
+
+      <Pagination totalItems={1302} pageItems={ITEMS_PER_PAGE} pageCount={5} />
     </main>
   );
 }
