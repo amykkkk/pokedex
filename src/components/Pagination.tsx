@@ -28,18 +28,37 @@ export default function Pagination({
   };
 
   return (
-    <ul className="mt-6 flex justify-center gap-2">
-      <li onClick={() => goToPage(startIdx - pageCount)}>&lt;</li>
-      {pageArr.map((_, i) => (
-        <li
-          key={i}
-          className={`rounded px-3 py-1 ${p === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
-          onClick={() => goToPage(i + 1)}
-        >
-          {i + 1}
+    <ul className="mt-6 flex justify-center gap-2 text-sm">
+      {pageGroup !== 1 && (
+        <li>
+          <button
+            onClick={() => goToPage(startIdx - 1)}
+            className="cursor-pointer rounded px-2 py-1"
+          >
+            &lt;
+          </button>
+        </li>
+      )}
+      {pageArr.map((page) => (
+        <li key={page}>
+          <button
+            className={`rounded px-3 py-1 ${p === page ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => goToPage(page)}
+          >
+            {page}
+          </button>
         </li>
       ))}
-      <li onClick={() => goToPage(startIdx + pageCount)}>&gt;</li>
+      {startIdx + pageCount - 1 < totalPages && (
+        <li>
+          <button
+            onClick={() => goToPage(startIdx + pageCount)}
+            className="cursor-pointer rounded px-2 py-1"
+          >
+            &gt;
+          </button>
+        </li>
+      )}
     </ul>
   );
 }
