@@ -1,7 +1,5 @@
-export const fetchAllPokemon = async (page: number, num: number) => {
-  const res = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?offset=${page}&limit=${num}`,
-  );
+export const fetchAllPokemon = async () => {
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1302`);
   const data = await res.json();
   return data.results;
 };

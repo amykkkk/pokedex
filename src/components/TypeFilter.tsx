@@ -4,11 +4,7 @@ import { fetchPokemonAllTypes } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function TypeFilter({
-  onSelect,
-}: {
-  onSelect: (type: string) => void;
-}) {
+export default function TypeFilter() {
   const [types, setTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
@@ -37,8 +33,7 @@ export default function TypeFilter({
 
   const handleType = (type: string) => {
     if (!type || t === type) return;
-    router.push(`?t=${type}&q=${q}`);
-    onSelect(type === "all" ? "" : type);
+    router.push(`?t=${type}&q=${q}&p=1`);
   };
 
   if (loading) return <p>타입 로딩 중입니다...🌀</p>;
@@ -46,7 +41,7 @@ export default function TypeFilter({
   return (
     <div className="mb-4 flex flex-wrap gap-2">
       <button
-        onClick={() => handleType("all")}
+        onClick={() => handleType("")}
         className="rounded bg-gray-300 px-2 py-1 transition hover:bg-gray-400"
       >
         전체 보기

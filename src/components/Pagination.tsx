@@ -24,7 +24,9 @@ export default function Pagination({
   );
 
   const goToPage = (num: number) => {
-    router.push(`/?p=${num}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("p", num.toString());
+    router.push(`/?${params.toString()}`);
   };
 
   return (
