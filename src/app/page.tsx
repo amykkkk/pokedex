@@ -7,6 +7,7 @@ import TypeFilter from "@/components/TypeFilter";
 import Search from "@/components/SearchBox";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
+import SelectBox from "@/components/SelectBox";
 
 export default function Home() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -18,6 +19,7 @@ export default function Home() {
   const search = searchParams.get("q") || "";
   const type = searchParams.get("t") || "";
   const curPage = Number(searchParams.get("p")) || 1;
+  const sort = searchParams.get("s") || "";
   const ITEMS_PER_PAGE = 20;
 
   useEffect(() => {
@@ -35,7 +37,24 @@ export default function Home() {
           p.name.toLowerCase().includes(search.toLowerCase()),
         );
 
-        const paginated = filtered.slice(offset, offset + ITEMS_PER_PAGE);
+        const sorted = filtered.sort((a: any, b: any) =>
+          sort === "asc"
+            ? a.name < b.name
+              ? -1
+              : a.name > b.name
+                ? 1
+                : 0
+            : sort === "desc"
+              ? a.name < b.name
+                ? 1
+                : a.name > b.name
+                  ? -1
+                  : 0
+              : sort === "321"
+                ? ""
+                : "",
+        );
+        const paginated = sorted.slice(offset, offset + ITEMS_PER_PAGE);
 
         setTotalItems(filtered.length);
         setPokemonList(paginated);
@@ -47,7 +66,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [type, search, curPage]);
+  }, [type, search, curPage, sort]);
 
   return (
     <main className="p-6">
@@ -56,6 +75,7 @@ export default function Home() {
         <Search placeholder="포켓몬 이름 검색" />
       </Suspense>
       <TypeFilter />
+      <SelectBox />
 
       {loading && <p className="text-gray-500">로딩 중입니다...🌀</p>}
       {error && <p className="text-red-500">{error}</p>}
