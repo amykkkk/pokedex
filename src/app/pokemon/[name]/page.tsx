@@ -14,7 +14,7 @@ export default async function PokemonDetail({
     <main className="p-6">
       <h1 className="mb-4 text-3xl font-bold capitalize">{data.name}</h1>
       <img
-        src={data.sprites.front_default}
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`}
         alt={data.name}
         className="mb-4 h-64 w-64 object-contain"
       />
@@ -47,11 +47,7 @@ export default async function PokemonDetail({
         <h2 className="mb-2 text-xl font-semibold">진화 정보</h2>
         <div className="flex items-center gap-4">
           {evolutions.map((evo) => (
-            <PokemonCard
-              key={evo}
-              name={evo}
-              image={`https://img.pokemondb.net/sprites/home/normal/${evo}.png`}
-            />
+            <PokemonCard key={evo} name={evo} />
           ))}
         </div>
       </div>

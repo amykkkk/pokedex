@@ -33,27 +33,25 @@ export default function Home() {
           ? await fetchPokemonByType(type)
           : await fetchAllPokemon();
 
-        const filtered = data.filter((p: any) =>
-          p.name.toLowerCase().includes(search.toLowerCase()),
-        );
+        const filtered = data
+          .filter((p: any) =>
+            p.name.toLowerCase().includes(search.toLowerCase()),
+          )
+          .map((p: any) => ({
+            name: p.name,
+            id: Number(p.url.split("/")[6]),
+          }));
 
         const sorted = filtered.sort((a: any, b: any) =>
           sort === "asc"
-            ? a.name < b.name
-              ? -1
-              : a.name > b.name
-                ? 1
-                : 0
+            ? a.name.localeCompare(b.name)
             : sort === "desc"
-              ? a.name < b.name
-                ? 1
-                : a.name > b.name
-                  ? -1
-                  : 0
-              : sort === "321"
-                ? ""
-                : "",
+              ? b.name.localeCompare(a.name)
+              : sort === "id-desc"
+                ? b.id - a.id
+                : a.id - b.id,
         );
+
         const paginated = sorted.slice(offset, offset + ITEMS_PER_PAGE);
 
         setTotalItems(filtered.length);
@@ -84,11 +82,7 @@ export default function Home() {
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {pokemonList.map((p: any) => (
-              <PokemonCard
-                key={p.name}
-                name={p.name}
-                image={`https://img.pokemondb.net/sprites/home/normal/${p.name}.png`}
-              />
+              <PokemonCard key={p.name} name={p.name} id={p.id} />
             ))}
           </div>
 

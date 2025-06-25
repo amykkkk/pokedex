@@ -3,6 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+const arr = [
+  { name: "A - Z", value: "asc" },
+  { name: " Z - A", value: "id-desc" },
+  { name: "Lowest Num", value: "id-asc" },
+  { name: "Highest Num", value: "id-desc" },
+];
+
 export default function SelectBox() {
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
@@ -20,37 +27,22 @@ export default function SelectBox() {
     <div className="relative w-28">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-1.5 font-semibold text-gray-300"
+        className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-1.5 text-xs font-semibold text-gray-300"
       >
-        {sort}
+        {arr.find(({ value }) => value === sort)?.name}
       </button>
       <ul
         className={`absolute top-full right-0 w-full overflow-hidden rounded-xl border border-gray-700 bg-gray-950 text-gray-300 shadow-lg backdrop-blur-xl ${isOpen ? "h-auto opacity-100 transition" : "h-0 opacity-0"}`}
       >
-        <li
-          className="cursor-pointer rounded px-3 py-2 text-xs hover:bg-blue-500 hover:text-white"
-          onClick={() => onSelectChange("321")}
-        >
-          Lowest Num
-        </li>
-        <li
-          onClick={() => onSelectChange("123")}
-          className="cursor-pointer rounded px-3 py-2 text-xs hover:bg-blue-500 hover:text-white"
-        >
-          Highest Num
-        </li>
-        <li
-          onClick={() => onSelectChange("asc")}
-          className="cursor-pointer rounded px-3 py-2 text-xs hover:bg-blue-500 hover:text-white"
-        >
-          A - Z
-        </li>
-        <li
-          onClick={() => onSelectChange("desc")}
-          className="cursor-pointer rounded px-3 py-2 text-xs hover:bg-blue-500 hover:text-white"
-        >
-          Z - A
-        </li>
+        {arr.map((list) => (
+          <li
+            key={list.name}
+            className="cursor-pointer rounded px-3 py-2 text-xs hover:bg-blue-500 hover:text-white"
+            onClick={() => onSelectChange(list.value)}
+          >
+            {list.name}
+          </li>
+        ))}
       </ul>
     </div>
   );
