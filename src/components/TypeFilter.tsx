@@ -9,7 +9,6 @@ export default function TypeFilter() {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const t = searchParams.get("t");
-  const q = searchParams.get("q") || "";
   const router = useRouter();
 
   useEffect(() => {
@@ -33,7 +32,10 @@ export default function TypeFilter() {
 
   const handleType = (type: string) => {
     if (!type || t === type) return;
-    router.push(`?t=${type}&q=${q}&p=1`);
+
+    const params = new URLSearchParams(searchParams);
+    params.set("t", type);
+    router.push(`/?${params}`);
   };
 
   if (loading) return <p>타입 로딩 중입니다...🌀</p>;

@@ -28,7 +28,6 @@ export default function Home() {
       setError("");
 
       try {
-        const offset = (curPage - 1) * ITEMS_PER_PAGE;
         const data = type
           ? await fetchPokemonByType(type)
           : await fetchAllPokemon();
@@ -52,6 +51,7 @@ export default function Home() {
                 : a.id - b.id,
         );
 
+        const offset = (curPage - 1) * ITEMS_PER_PAGE;
         const paginated = sorted.slice(offset, offset + ITEMS_PER_PAGE);
 
         setTotalItems(filtered.length);
@@ -67,7 +67,7 @@ export default function Home() {
   }, [type, search, curPage, sort]);
 
   return (
-    <main className="p-6">
+    <main className="bg-zinc-900 p-6">
       <h1 className="mb-4 text-2xl font-bold">🔥 PokéAPI</h1>
       <Suspense fallback={<div>loading,,,</div>}>
         <Search placeholder="포켓몬 이름 검색" />
