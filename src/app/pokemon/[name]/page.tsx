@@ -1,4 +1,5 @@
 import PokemonCard from "@/components/PokemonCard";
+import StatsChart from "@/components/StatsChart";
 import { fetchPokeEvoChain, fetchPokemonDetail } from "@/lib/api";
 
 export default async function PokemonDetail({
@@ -10,11 +11,17 @@ export default async function PokemonDetail({
   const data = await fetchPokemonDetail(name);
   const evolutions = await fetchPokeEvoChain(name);
 
+  const imgUrl =
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png` !==
+    undefined
+      ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`
+      : `https://upload.wikimedia.org/wikipedia/commons/5/53/Poké_Ball_icon.svg`;
+
   return (
     <main className="p-6">
       <h1 className="mb-4 text-3xl font-bold capitalize">{data.name}</h1>
       <img
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`}
+        src={imgUrl}
         alt={data.name}
         className="mb-4 h-64 w-64 object-contain"
       />
@@ -31,15 +38,9 @@ export default async function PokemonDetail({
           {data.types.map((t: any) => t.type.name).join(", ")}
         </p>
 
-        <div>
-          <strong>📊 능력치:</strong>
-          <ul className="list-inside list-disc">
-            {data.stats.map((s: any) => (
-              <li key={s.stat.name}>
-                {s.stat.name}: {s.base_stat}
-              </li>
-            ))}
-          </ul>
+        <div className="w-1/3">
+          <h2 className="mb-2 text-lg font-bold">📊 능력치 그래프</h2>
+          <StatsChart stats={data.stats} />
         </div>
       </div>
 
