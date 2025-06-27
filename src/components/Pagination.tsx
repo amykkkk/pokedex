@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Pagination({
   totalItems,
@@ -30,21 +31,25 @@ export default function Pagination({
   };
 
   return (
-    <ul className="mt-6 flex justify-center gap-2 text-sm">
+    <ul className="mt-10 flex items-center justify-center gap-2">
       {pageGroup !== 1 && (
         <li>
           <button
             onClick={() => goToPage(startIdx - 1)}
-            className="cursor-pointer rounded px-2 py-1"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 transition hover:bg-red-500 hover:text-white"
           >
-            &lt;
+            <ChevronLeft />
           </button>
         </li>
       )}
       {pageArr.map((page) => (
         <li key={page}>
           <button
-            className={`rounded px-3 py-1 ${p === page ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-full font-semibold transition ${
+              p === page
+                ? "bg-red-500 text-white shadow-md"
+                : "bg-gray-100 text-gray-600 hover:bg-red-100"
+            }`}
             onClick={() => goToPage(page)}
           >
             {page}
@@ -55,9 +60,9 @@ export default function Pagination({
         <li>
           <button
             onClick={() => goToPage(startIdx + pageCount)}
-            className="cursor-pointer rounded px-2 py-1"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 transition hover:bg-red-500 hover:text-white"
           >
-            &gt;
+            <ChevronRight />
           </button>
         </li>
       )}

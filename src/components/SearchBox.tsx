@@ -30,16 +30,24 @@ export default function SearchBox({ placeholder }: { placeholder: string }) {
   };
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative mr-auto w-full max-w-xl md:w-1/2">
       <input
         type="text"
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className="peer w-full rounded-full border border-gray-300 bg-white py-3 pr-14 pl-5 text-base text-gray-800 placeholder-gray-400 shadow-md focus:border-red-400 focus:ring-2 focus:ring-red-300 focus:outline-none"
         placeholder={placeholder}
         value={search}
         onChange={onChangeSearch}
         onKeyDown={onKeyDown}
       />
-      <button onClick={onSubmit}>검색</button>
+      <button
+        onClick={onSubmit}
+        className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 shadow-md transition hover:bg-red-600"
+      >
+        <div className="relative h-5 w-5">
+          <span className="absolute inset-0 m-auto h-5 w-5 rounded-full border-4 border-white"></span>
+          <span className="absolute top-1 left-1 h-3 w-3 rounded-full bg-white"></span>
+        </div>
+      </button>
     </div>
   );
 }

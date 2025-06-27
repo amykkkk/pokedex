@@ -1,7 +1,7 @@
 "use client";
 
 import { Radar } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
+import "chart.js/auto";
 import type { ChartOptions } from "chart.js";
 
 type IStats = {
@@ -32,15 +32,8 @@ export default function StatsChart({ stats }: { stats: IStats[] }) {
         ticks: {
           stepSize: 20,
           showLabelBackdrop: false,
-          color: "white",
         },
         beginAtZero: true,
-        grid: {
-          color: "white",
-        },
-        pointLabels: {
-          color: "white",
-        },
       },
     },
     plugins: {

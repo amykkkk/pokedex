@@ -14,10 +14,22 @@ export default function PokemonCard({ name, id }: ICardProps) {
 
   return (
     <Link href={`/pokemon/${name}`}>
-      <div className="rounded-xl bg-white p-4 text-center shadow-md transition-transform hover:scale-105">
-        <span>{id}</span>
-        <img src={imgUrl} alt={name} className="mx-auto h-24 w-24" />
-        <h3 className="mt-2 font-bold text-black capitalize">{name}</h3>
+      <div className="group relative overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
+        <div className="absolute inset-0 bg-gradient-to-tr from-pink-50 to-blue-50 opacity-10 transition-opacity duration-300 group-hover:opacity-20" />
+
+        <img
+          src={imgUrl}
+          alt={name}
+          className="mx-auto h-24 w-24 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110"
+        />
+        <h3 className="mt-4 text-center text-lg font-bold text-gray-800 capitalize">
+          {name}
+        </h3>
+        {id && (
+          <p className="mt-1 text-center text-sm text-gray-400">
+            #{id.toString().padStart(3, "0")}
+          </p>
+        )}
       </div>
     </Link>
   );
