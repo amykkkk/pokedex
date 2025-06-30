@@ -100,10 +100,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-pink-50 px-6 py-10 sm:px-12 md:px-24">
-      <h1 className="mb-8 text-center text-4xl font-black text-gray-800">
-        🔥 Pokédex
-      </h1>
-
       <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
         <Suspense fallback={<div>로딩 중입니다...</div>}>
           <Search placeholder="포켓몬 이름 검색" />
