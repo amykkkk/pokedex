@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Header from "@/components/Header";
-import { getCookie } from "@/utils/cookie";
+import { cookies } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const theme = (await getCookie("theme")) ?? "light";
+  const cookieStore = cookies();
+  const theme = (await cookieStore).get("theme")?.value || "light";
 
   return (
     <html lang="kr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${theme}`}
       >
-        <Header isTheme={theme} />
+        <Header />
         {children}
       </body>
     </html>
