@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
 import SelectBox from "@/components/SelectBox";
 import { SlidersHorizontal } from "lucide-react";
+import CardLoading from "@/components/loading/CardLoading";
 
 const arr = [
   { name: "A - Z", value: "asc" },
@@ -24,9 +25,6 @@ export default function Home() {
   const [pokemonList, setPokemonList] = useState([]);
   const [types, setTypes] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const searchParams = useSearchParams();
   const search = searchParams.get("q") || "";
   const type = searchParams.get("t") || "";
@@ -36,8 +34,6 @@ export default function Home() {
 
   useEffect(() => {
     const loadTypes = async () => {
-      setLoading(true);
-
       try {
         const data = await fetchPokemonAllTypes();
         const filtered = data
@@ -47,8 +43,6 @@ export default function Home() {
         setTypes(filtered);
       } catch (err) {
         console.error("타입 리스트 로딩 실패!!😭", err);
-      } finally {
-        setLoading(false);
       }
     };
     loadTypes();
@@ -56,9 +50,6 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError("");
-
       try {
         const data = type
           ? await fetchPokemonByType(type)
@@ -89,9 +80,7 @@ export default function Home() {
         setTotalItems(filtered.length);
         setPokemonList(paginated);
       } catch (err) {
-        setError("데이터를 불러오는데 실패...😭");
-      } finally {
-        setLoading(false);
+        console.error("데이터를 불러오는데 실패...😭", err);
       }
     };
 
@@ -101,44 +90,41 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-pink-50 px-6 py-10 sm:px-12 md:px-24">
       <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
-        <Suspense fallback={<div>로딩 중입니다...</div>}>
+        <Suspense
+          fallback={
+            <div className="skeleton mr-auto h-10 w-full max-w-xl md:w-1/2" />
+          }
+        >
           <Search placeholder="포켓몬 이름 검색" />
+        </Suspense>
 
-          <SelectBox options={types} query={"t"} title={"Type"} />
+        {types && <SelectBox options={types} query={"t"} title={"Type"} />}
+        {pokemonList && (
           <SelectBox
             options={arr}
             query={"s"}
             title={"Sort"}
             icon={<SlidersHorizontal />}
           />
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <Suspense fallback={<CardLoading limit={ITEMS_PER_PAGE} />}>
+          {pokemonList.map((p: any) => (
+            <PokemonCard key={p.name} name={p.name} id={p.id} />
+          ))}
         </Suspense>
       </div>
 
-      {loading && (
-        <p className="animate-pulse text-center text-gray-500">
-          로딩 중입니다...🌀
-        </p>
-      )}
-      {error && (
-        <p className="text-center font-semibold text-red-500">{error}</p>
-      )}
-
-      {!loading && !error && (
-        <>
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {pokemonList.map((p: any) => (
-              <PokemonCard key={p.name} name={p.name} id={p.id} />
-            ))}
-          </div>
-
-          <div className="mt-10">
-            <Pagination
-              totalItems={totalItems}
-              pageItems={ITEMS_PER_PAGE}
-              pageCount={5}
-            />
-          </div>
-        </>
+      {totalItems !== 0 && (
+        <div className="mt-10">
+          <Pagination
+            totalItems={totalItems}
+            pageItems={ITEMS_PER_PAGE}
+            pageCount={5}
+          />
+        </div>
       )}
     </main>
   );
