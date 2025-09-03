@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.56.1",
     "chart.js": "^4.5.0",
     "cookies-next": "^6.0.0",
     "lucide-react": "^0.523.0",
