@@ -82,7 +82,7 @@ export default function Avatar({
       </div>
 
       <label
-        htmlFor="single"
+        htmlFor="avatarUpload"
         className={`bg-accent absolute right-1 bottom-1 flex cursor-pointer items-center justify-center rounded-full p-2 text-white shadow-md transition-all duration-300 ${uploading ? "cursor-not-allowed opacity-50" : "hover:bg-accent/90 hover:scale-110"} `}
       >
         <Plus size={14} />

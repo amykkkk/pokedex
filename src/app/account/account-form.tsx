@@ -105,7 +105,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <input
           id="created_at"
           type="text"
-          value={user?.created_at}
+          value={user?.created_at.split("T")[0]}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
