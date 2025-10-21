@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { Plus } from "lucide-react";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 
@@ -65,36 +66,35 @@ export default function Avatar({
   };
 
   return (
-    <div>
-      {avatarUrl ? (
-        <Image
-          width={size}
-          height={size}
-          src={avatarUrl}
-          alt={"Avatar"}
-          className="avatar image"
-          style={{ height: size, width: size }}
-        />
-      ) : (
-        <div
-          className="avatar no-image"
-          style={{ height: size, width: size }}
-        />
-      )}
-
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? "Uploading ..." : "Upload Avatar"}
-        </label>
-        <input
-          style={{ visibility: "hidden", position: "absolute" }}
-          type="file"
-          id="single"
-          accept="image/*"
-          onChange={uploadAvatar}
-          disabled={uploading}
-        />
+    <div className="relative m-auto mb-4" style={{ width: size, height: size }}>
+      <div
+        className={`ring-accent h-full w-full overflow-hidden rounded-full shadow-md ring-2 ${!avatarUrl && "bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300"}`}
+      >
+        {avatarUrl && (
+          <Image
+            width={size}
+            height={size}
+            src={avatarUrl}
+            alt={"Avatar"}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        )}
       </div>
+
+      <label
+        htmlFor="single"
+        className={`bg-accent absolute right-1 bottom-1 flex cursor-pointer items-center justify-center rounded-full p-2 text-white shadow-md transition-all duration-300 ${uploading ? "cursor-not-allowed opacity-50" : "hover:bg-accent/90 hover:scale-110"} `}
+      >
+        <Plus size={14} />
+        <input
+          id="avatarUpload"
+          type="file"
+          accept="image/*"
+          disabled={uploading}
+          onChange={uploadAvatar}
+          className="hidden"
+        />
+      </label>
     </div>
   );
 }

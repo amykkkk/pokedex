@@ -3,18 +3,30 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --color-mint-500: oklch(0.72 0.11 178);
-  --color-banana: oklch(0.95 0.05 100);
+  --color-accent: oklch(0.72 0.11 178);
+  --color-bg: oklch(0.96 0 0);
+  --color-card: oklch(1 0 0);
+  --color-border: oklch(0.85 0 0);
+  --color-text: oklch(0.3 0.03 80);
+  --color-search: oklch(1 0 0);
 }
 
 .dark {
-  --color-mint-500: oklch(0.95 0.05 100);
-  --color-banana: oklch(0.72 0.11 178);
+  --color-accent: oklch(0.7 0.13 178);
+  --color-bg: oklch(0.22 0.02 250);
+  --color-card: oklch(0.26 0.02 250);
+  --color-border: oklch(0.35 0.03 260);
+  --color-text: oklch(0.95 0.02 90);
+  --color-search: oklch(0.3 0.02 260);
 }
 
 @theme {
-  --color-mint-500: var(--color-mint-500);
-  --color-banana: var(--color-banana);
+  --color-accent: var(--color-accent);
+  --color-bg: var(--color-bg);
+  --color-card: var(--color-card);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-search: var(--color-search);
 
   --animate-shimmer: shimmer 4s infinite linear;
   @keyframes shimmer {
@@ -29,4 +41,26 @@
 
 @utility skeleton {
   @apply animate-shimmer rounded-sm bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-size-[300%_100%];
+}
+
+/* ---------- 스크롤바 및 기본 스타일 ---------- */
+body {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
 }
