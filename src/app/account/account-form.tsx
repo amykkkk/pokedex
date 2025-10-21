@@ -146,17 +146,6 @@ export default function AccountForm({ user }: { user: User | null }) {
           {loading ? "Updating..." : "Update Profile"}
         </button>
       </div>
-
-      <div className="mt-6">
-        <form action="/auth/signout" method="post">
-          <button
-            type="submit"
-            className="border-border text-text hover:bg-border/20 w-full rounded-lg border bg-transparent py-2 text-sm font-semibold transition"
-          >
-            Sign out
-          </button>
-        </form>
-      </div>
     </div>
   );
 }
