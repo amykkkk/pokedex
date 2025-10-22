@@ -3,15 +3,24 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCookie, setCookie } from "cookies-next";
-import { LogIn, LogOut, Moon, Sun, User as UserIcon } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  Moon,
+  Sun,
+  User as UserIcon,
+  UserPen,
+} from "lucide-react";
 import { type User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -28,13 +37,14 @@ export default function Header() {
       setUser(user);
     };
     getUser();
-  }, [supabase]);
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
 
     setUser(null);
     setOpen(false);
+    router.push("/login");
   };
 
   return (
@@ -71,7 +81,7 @@ export default function Header() {
                       className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
                       onClick={() => setOpen(false)}
                     >
-                      Account
+                      <UserPen size={16} /> Account
                     </Link>
                   </li>
                   <li>
