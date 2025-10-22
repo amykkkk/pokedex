@@ -5,13 +5,13 @@ import Link from "next/link";
 import { getCookie, setCookie } from "cookies-next";
 import { LogIn, LogOut, Moon, Sun, User as UserIcon } from "lucide-react";
 import { type User } from "@supabase/supabase-js";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/client";
 
 export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
