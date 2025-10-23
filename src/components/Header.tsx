@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { getCookie, setCookie } from "cookies-next";
 import {
@@ -11,16 +11,16 @@ import {
   User as UserIcon,
   UserPen,
 } from "lucide-react";
-import { type User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
-  const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
+  const { user } = useAuthStore();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -29,26 +29,15 @@ export default function Header() {
     document.documentElement.className = newTheme;
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
-
   const handleSignOut = async () => {
     await supabase.auth.signOut();
 
-    setUser(null);
     setOpen(false);
     router.push("/login");
   };
 
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-4 backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-900/80">
+    <div className="relative z-20 flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-4 backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-900/80">
       <h1 className="text-accent text-2xl font-extrabold tracking-tight">
         Pokédex
       </h1>
@@ -56,7 +45,7 @@ export default function Header() {
       <div className="relative">
         <button
           onClick={toggleTheme}
-          className={`border-border bg-bg relative h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
+          className={`border-border bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
         >
           <span className="text-text flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white p-0.5 transition-all duration-300 dark:translate-x-5 dark:bg-black dark:text-white">
             {theme === "light" ? <Sun /> : <Moon />}
