@@ -4,30 +4,28 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/stores/authStore";
 import { useEffect } from "react";
 
-export default function AuthLayer() {
-  const { setUser } = useAuthStore();
+export default function InitUser() {
+  const { user, setUser } = useAuthStore();
 
   useEffect(() => {
     const supabase = createClient();
 
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
+        if (session?.user) {
+          setUser(session.user);
+        }
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
     });
 
     return () => {
       subscription?.unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   return null;
 }

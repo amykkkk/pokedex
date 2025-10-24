@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCookie, setCookie } from "cookies-next";
 import {
@@ -12,15 +12,17 @@ import {
   UserPen,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 import { useAuthStore } from "@/stores/authStore";
 
-export default function Header() {
+export default function Header({ user }: { user: User | null }) {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [open, setOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
-  const { user } = useAuthStore();
+  const pathName = usePathname();
+  const { setUser } = useAuthStore();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -29,11 +31,15 @@ export default function Header() {
     document.documentElement.className = newTheme;
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-
+  const handleSignOut = () => {
+    supabase.auth.signOut();
     setOpen(false);
-    router.push("/login");
+    setUser(null);
+
+    if (pathName === "/account") {
+      router.push("/login");
+    }
+    router.refresh();
   };
 
   return (
