@@ -13,16 +13,32 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import { User } from "@supabase/supabase-js";
-import { useAuthStore } from "@/stores/authStore";
+import { useAuthStore } from "@/stores/auth-store";
+// import { useAuthStore } from "@/components/AuthProvider";
 
-export default function Header({ user }: { user: User | null }) {
+export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [open, setOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
   const pathName = usePathname();
-  const { setUser } = useAuthStore();
+  const { user, setUser } = useAuthStore();
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
+        if (session?.user) {
+          setUser(session.user);
+        }
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+
+    return () => subscription?.unsubscribe();
+  }, [setUser]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";

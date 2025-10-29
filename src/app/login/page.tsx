@@ -1,4 +1,5 @@
-import { login, signup } from "./actions";
+import LoginForm from "@/components/login-form";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -17,72 +18,19 @@ export default function LoginPage() {
             </p>
           </header>
 
-          <form className="space-y-5">
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-[var(--color-text)]/80"
-              >
-                이메일
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-search)] px-4 py-2 text-sm transition outline-none placeholder:text-[var(--color-text)]/50 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
-                placeholder="you@example.com"
-                autoComplete="email"
-              />
-            </div>
+          <LoginForm />
 
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-medium text-[var(--color-text)]/80"
+          <div className="mt-4 text-center text-xs text-[var(--color-text)]/60">
+            <p>
+              비밀번호를 잊으셨나요?
+              <Link
+                className="pl-1 text-[var(--color-accent)] underline"
+                href="/reset"
               >
-                비밀번호
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-search)] px-4 py-2 text-sm transition outline-none placeholder:text-[var(--color-text)]/50 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
-                placeholder="••••••••"
-                autoComplete="current-password"
-              />
-            </div>
-
-            <div className="mt-2 flex flex-col gap-3">
-              <button
-                formAction={login}
-                className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white shadow transition hover:brightness-95"
-                // type="submit"
-              >
-                로그인
-              </button>
-              <button
-                formAction={signup}
-                className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-search)]"
-                // type="submit"
-              >
-                계정 생성
-              </button>
-            </div>
-
-            <div className="mt-4 text-center text-xs text-[var(--color-text)]/60">
-              <p>
-                비밀번호를 잊으셨나요?{" "}
-                <a
-                  className="text-[var(--color-accent)] underline"
-                  href="/reset"
-                >
-                  비밀번호 재설정
-                </a>
-              </p>
-            </div>
-          </form>
+                비밀번호 재설정
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
     </main>
