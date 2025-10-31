@@ -4,65 +4,28 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
+import { useUserInfoStore } from "@/stores/auth-store";
 
-export default function AccountForm({ user }: { user: User | null }) {
+export default function AccountForm() {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
-  const [nickname, setNickname] = useState<string | null>(null);
-  const [avatar_url, setAvatarUrl] = useState<string | null>(null);
+  const [profile, setProfile] = useState({
+    name: "",
+    img: "",
+  });
 
-  const getProfile = useCallback(async () => {
-    if (!user?.id) {
-      setNickname(null);
-      setAvatarUrl(null);
-      setLoading(false);
-      return;
-    }
+  const { id, email, nickname, profileImage, createdAt, setUser } =
+    useUserInfoStore();
 
-    try {
-      setLoading(true);
-
-      const { data, error, status } = await supabase
-        .from("profiles")
-        .select(`nickname, avatar_url`)
-        .eq("id", user.id)
-        .single();
-
-      if (error && status !== 406) {
-        console.error(error);
-        throw error;
-      }
-
-      if (data) {
-        setNickname(data.nickname);
-        setAvatarUrl(data.avatar_url);
-      }
-    } catch (err) {
-      console.error("Error loading user data!", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [user, supabase]);
-
-  useEffect(() => {
-    getProfile();
-  }, [user, getProfile]);
-
-  async function updateProfile({
-    nickname,
-    avatar_url,
-  }: {
-    nickname: string | null;
-    avatar_url: string | null;
-  }) {
+  async function updateProfile({ name, img }: { name: string; img: string }) {
     try {
       setLoading(true);
 
       const { error } = await supabase.from("profiles").upsert({
-        id: user?.id as string,
-        nickname,
-        avatar_url,
-        updated_at: new Date().toISOString(),
+        // id: user?.id as string,
+        nickname: name,
+        avatar_url: img,
+        // updated_at: new Date().toISOString(),
       });
       if (error) throw error;
       alert("Profile updated!");
@@ -89,7 +52,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <input
           id="email"
           type="text"
-          value={user?.email}
+          value={email ?? ""}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
@@ -105,7 +68,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <input
           id="created_at"
           type="text"
-          value={user?.created_at.split("T")[0]}
+          value={createdAt ? createdAt.split("T")[0] : ""}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
@@ -122,25 +85,24 @@ export default function AccountForm({ user }: { user: User | null }) {
           id="nickname"
           type="text"
           value={nickname || ""}
-          onChange={(e) => setNickname(e.target.value)}
+          onChange={(e) => setProfile({ ...profile, name: e.target.value })}
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:outline-none dark:text-gray-100"
         />
       </div>
 
       <Avatar
-        uid={user?.id ?? null}
-        url={avatar_url}
+        uid={id}
+        url={profileImage}
         size={150}
         onUpload={(url) => {
-          setAvatarUrl(url);
-          updateProfile({ nickname, avatar_url: url });
+          updateProfile({ ...profile });
         }}
       />
 
       <div className="mb-4">
         <button
           className="bg-accent w-full rounded-lg py-2 text-sm font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
-          onClick={() => updateProfile({ nickname, avatar_url })}
+          onClick={() => updateProfile({ ...profile })}
           disabled={loading}
         >
           {loading ? "Updating..." : "Update Profile"}

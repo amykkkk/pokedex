@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuthStore } from "@/stores/auth-store";
-// import { useAuthStore } from "@/components/AuthProvider";
+import { useUserInfoStore } from "@/stores/auth-store";
+import useLoggedIn from "@/app/_hooks/useLoggedIn";
 
 export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
@@ -22,23 +22,8 @@ export default function Header() {
   const supabase = createClient();
   const router = useRouter();
   const pathName = usePathname();
-  const { user, setUser } = useAuthStore();
-
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
-        if (session?.user) {
-          setUser(session.user);
-        }
-      } else if (event === "SIGNED_OUT") {
-        setUser(null);
-      }
-    });
-
-    return () => subscription?.unsubscribe();
-  }, [setUser]);
+  const { nickname, profileImage, setUser } = useUserInfoStore();
+  const isLogin = useLoggedIn();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -50,7 +35,13 @@ export default function Header() {
   const handleSignOut = () => {
     supabase.auth.signOut();
     setOpen(false);
-    setUser(null);
+    setUser({
+      id: null,
+      email: null,
+      nickname: null,
+      profileImage: null,
+      createdAt: null,
+    });
 
     if (pathName === "/account") {
       router.push("/login");
@@ -78,13 +69,21 @@ export default function Header() {
           onClick={() => setOpen(!open)}
           className="bg-accent ml-2 rounded-full p-1 text-white transition"
         >
-          <UserIcon />
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt={nickname ?? ""}
+              className="h-6 w-6 rounded-full"
+            />
+          ) : (
+            <UserIcon />
+          )}
         </button>
 
         {open && (
           <div className="animate-fade-in absolute right-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-              {user ? (
+              {isLogin ? (
                 <>
                   <li>
                     <Link

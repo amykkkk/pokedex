@@ -8,7 +8,7 @@ import { useActionState, useEffect } from "react";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
-  const { setUser } = useAuthStore();
+  const { isLogin, setIsLogin } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function LoginForm() {
       return alert(state.error);
     }
 
-    setUser(state.user);
+    setIsLogin(true);
     router.push("/");
   }, [state]);
 

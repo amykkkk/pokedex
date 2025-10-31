@@ -1,12 +1,32 @@
-import type { User } from "@supabase/supabase-js";
 import { create } from "zustand";
 
-type UserStore = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+type UserState = {
+  id: string | null;
+  email: string | null;
+  nickname: string | null;
+  profileImage: string | null;
+  createdAt: string | null;
 };
 
-export const useAuthStore = create<UserStore>((set) => ({
-  user: null,
-  setUser: (u) => set({ user: u }),
+type UserAction = {
+  setUser: (u: UserState) => void;
+};
+
+export const useUserInfoStore = create<UserState & UserAction>((set) => ({
+  id: null,
+  email: null,
+  nickname: null,
+  profileImage: null,
+  createdAt: null,
+  setUser: (u) => set(u),
+}));
+
+type AuthState = {
+  isLogin: boolean;
+  setIsLogin: (u: boolean) => void;
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  isLogin: false,
+  setIsLogin: (u) => set({ isLogin: u }),
 }));

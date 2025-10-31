@@ -20,23 +20,23 @@ export default function Avatar({
   const [avatarUrl, setAvatarUrl] = useState<string | null>(url);
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    async function downloadImage(path: string) {
-      try {
-        const { data, error } = await supabase.storage
-          .from("avatars")
-          .download(path);
-        if (error) {
-          throw error;
-        }
-        const url = URL.createObjectURL(data);
-        setAvatarUrl(url);
-      } catch (error) {
-        console.error("Error downloading image: ", error);
-      }
-    }
-    if (url) downloadImage(url);
-  }, [url, supabase]);
+  // useEffect(() => {
+  //   async function downloadImage(path: string) {
+  //     try {
+  //       const { data, error } = await supabase.storage
+  //         .from("avatars")
+  //         .download(path);
+  //       if (error) {
+  //         throw error;
+  //       }
+  //       const url = URL.createObjectURL(data);
+  //       setAvatarUrl(url);
+  //     } catch (error) {
+  //       console.error("Error downloading image: ", error);
+  //     }
+  //   }
+  //   if (url) downloadImage(url);
+  // }, [url, supabase]);
 
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
