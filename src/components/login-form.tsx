@@ -8,7 +8,7 @@ import { useActionState, useEffect } from "react";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
-  const { isLogin, setIsLogin } = useAuthStore();
+  const { setIsLogin } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {

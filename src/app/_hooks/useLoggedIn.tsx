@@ -31,7 +31,7 @@ export default function useLoggedIn() {
           id: profiles.id,
           email: user.user_metadata.email,
           nickname: profiles.nickname,
-          profileImage: profiles.publicUrl,
+          profileImage: profiles.avatar_url,
           createdAt: profiles.create_at,
         });
 

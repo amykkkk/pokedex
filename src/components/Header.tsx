@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserInfoStore } from "@/stores/auth-store";
+import Image from "next/image";
 import useLoggedIn from "@/app/_hooks/useLoggedIn";
 
 export default function Header() {
@@ -67,13 +68,15 @@ export default function Header() {
 
         <button
           onClick={() => setOpen(!open)}
-          className="bg-accent ml-2 rounded-full p-1 text-white transition"
+          className={`ml-2 overflow-hidden rounded-full transition ${!profileImage && "bg-accent p-1 text-white"} `}
         >
           {profileImage ? (
-            <img
-              src={profileImage}
-              alt={nickname ?? ""}
-              className="h-6 w-6 rounded-full"
+            <Image
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profileImage}`}
+              alt={`${nickname} avatar image`}
+              width={28}
+              height={28}
+              className="h-7 w-7"
             />
           ) : (
             <UserIcon />
