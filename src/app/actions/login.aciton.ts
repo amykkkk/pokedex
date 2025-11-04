@@ -15,24 +15,22 @@ export async function loginAction(_: any, formData: FormData) {
     return {
       status: false,
       error: "Email and password are required.",
-      user: null,
     };
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword(obj);
+    const { error } = await supabase.auth.signInWithPassword(obj);
 
     if (error) {
       throw new Error(error.message);
     }
 
     revalidatePath("/login", "layout");
-    return { status: true, error: null, user: data.user };
+    return { status: true, error: null };
   } catch (err) {
     return {
       status: false,
       error: err,
-      user: null,
     };
   }
 }

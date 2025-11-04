@@ -1,31 +1,53 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
-import { useUserInfoStore } from "@/stores/auth-store";
 
-export default function AccountForm() {
+export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState({
-    name: "",
+    nickname: "",
     img: "",
+    email: "",
+    createdAt: "",
   });
 
-  const { id, email, nickname, profileImage, createdAt, setUser } =
-    useUserInfoStore();
+  useEffect(() => {
+    if (!user) return;
 
-  async function updateProfile({ name, img }: { name: string; img: string }) {
+    const checkLoginStatus = async () => {
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select()
+        .eq("id", user.id)
+        .single();
+
+      if (error && status !== 406) {
+        return console.log(error);
+      }
+
+      if (!data) return;
+
+      setProfile({
+        nickname: data.nickname,
+        img: data.avatar_url,
+        email: data.email,
+        createdAt: data.created_at,
+      });
+    };
+    checkLoginStatus();
+  }, [user]);
+
+  async function updateProfile({ name, img }: { name?: string; img: string }) {
     try {
       setLoading(true);
 
       const { error } = await supabase.from("profiles").upsert({
-        // id: user?.id as string,
         nickname: name,
         avatar_url: img,
-        // updated_at: new Date().toISOString(),
       });
       if (error) throw error;
       alert("Profile updated!");
@@ -52,7 +74,7 @@ export default function AccountForm() {
         <input
           id="email"
           type="text"
-          value={email ?? ""}
+          value={profile.email}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
@@ -68,7 +90,7 @@ export default function AccountForm() {
         <input
           id="created_at"
           type="text"
-          value={createdAt ? createdAt.split("T")[0] : ""}
+          value={profile.createdAt.split("T")[0]}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
@@ -84,25 +106,27 @@ export default function AccountForm() {
         <input
           id="nickname"
           type="text"
-          value={nickname || ""}
-          onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+          value={profile.nickname}
+          onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:outline-none dark:text-gray-100"
         />
       </div>
 
       <Avatar
-        uid={id}
-        url={profileImage}
+        uid={user ? user.id : ""}
+        url={profile.img}
         size={150}
         onUpload={(url) => {
-          updateProfile({ ...profile });
+          updateProfile({ img: url });
         }}
       />
 
       <div className="mb-4">
         <button
           className="bg-accent w-full rounded-lg py-2 text-sm font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
-          onClick={() => updateProfile({ ...profile })}
+          onClick={() =>
+            updateProfile({ name: profile.nickname, img: profile.img })
+          }
           disabled={loading}
         >
           {loading ? "Updating..." : "Update Profile"}

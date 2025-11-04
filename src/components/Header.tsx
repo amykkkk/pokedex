@@ -13,18 +13,36 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import { useUserInfoStore } from "@/stores/auth-store";
 import Image from "next/image";
-import useLoggedIn from "@/app/_hooks/useLoggedIn";
-
-export default function Header() {
+import { User } from "@supabase/supabase-js";
+export default function Header({ user }: { user: User | null }) {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [open, setOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
   const supabase = createClient();
   const router = useRouter();
   const pathName = usePathname();
-  const { nickname, profileImage, setUser } = useUserInfoStore();
-  const isLogin = useLoggedIn();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const checkLoginStatus = async () => {
+      const {
+        data: profiles,
+        error,
+        status,
+      } = await supabase.from("profiles").select().eq("id", user.id).single();
+
+      if (error && status !== 406) {
+        return console.log(error);
+      }
+
+      if (!profiles) return;
+
+      setProfileImage(profiles.avatar_url);
+    };
+    checkLoginStatus();
+  }, [user]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -33,16 +51,10 @@ export default function Header() {
     document.documentElement.className = newTheme;
   };
 
-  const handleSignOut = () => {
-    supabase.auth.signOut();
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
     setOpen(false);
-    setUser({
-      id: null,
-      email: null,
-      nickname: null,
-      profileImage: null,
-      createdAt: null,
-    });
+    setProfileImage("");
 
     if (pathName === "/account") {
       router.push("/login");
@@ -73,7 +85,7 @@ export default function Header() {
           {profileImage ? (
             <Image
               src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profileImage}`}
-              alt={`${nickname} avatar image`}
+              alt="Profile Image"
               width={28}
               height={28}
               className="h-7 w-7"
@@ -86,7 +98,7 @@ export default function Header() {
         {open && (
           <div className="animate-fade-in absolute right-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-              {isLogin ? (
+              {user ? (
                 <>
                   <li>
                     <Link

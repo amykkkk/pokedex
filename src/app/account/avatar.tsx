@@ -17,26 +17,7 @@ export default function Avatar({
   onUpload: (url: string) => void;
 }) {
   const supabase = createClient();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(url);
   const [uploading, setUploading] = useState(false);
-
-  // useEffect(() => {
-  //   async function downloadImage(path: string) {
-  //     try {
-  //       const { data, error } = await supabase.storage
-  //         .from("avatars")
-  //         .download(path);
-  //       if (error) {
-  //         throw error;
-  //       }
-  //       const url = URL.createObjectURL(data);
-  //       setAvatarUrl(url);
-  //     } catch (error) {
-  //       console.error("Error downloading image: ", error);
-  //     }
-  //   }
-  //   if (url) downloadImage(url);
-  // }, [url, supabase]);
 
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -68,14 +49,14 @@ export default function Avatar({
   return (
     <div className="relative m-auto mb-4" style={{ width: size, height: size }}>
       <div
-        className={`ring-accent h-full w-full overflow-hidden rounded-full shadow-md ring-2 ${!avatarUrl && "bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300"}`}
+        className={`ring-accent h-full w-full overflow-hidden rounded-full shadow-md ring-2 ${!url && "bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300"}`}
       >
-        {avatarUrl && (
+        {url && (
           <Image
             width={size}
             height={size}
-            src={avatarUrl}
-            alt={"Avatar"}
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${url}`}
+            alt="Profile Image"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         )}

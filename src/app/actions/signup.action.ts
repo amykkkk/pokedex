@@ -2,22 +2,35 @@
 
 import { createServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-export async function signup(formData: FormData) {
+export async function signUpAction(_: any, formData: FormData) {
   const supabase = await createServer();
 
-  const data = {
+  const obj = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    redirect("/error");
+  if (obj.email === "" || obj.password === "") {
+    return {
+      status: false,
+      error: "Email and password are required.",
+    };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  try {
+    const { error } = await supabase.auth.signUp(obj);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    revalidatePath("/login", "layout");
+    return { status: true, error: null };
+  } catch (err) {
+    return {
+      status: false,
+      error: err,
+    };
+  }
 }

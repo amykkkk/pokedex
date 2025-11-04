@@ -1,7 +1,8 @@
-import LoginForm from "@/components/login-form";
-import Link from "next/link";
-
-export default function LoginPage() {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] p-6">
       <section className="w-full max-w-md">
@@ -17,20 +18,7 @@ export default function LoginPage() {
               이메일과 비밀번호로 로그인하거나 새 계정을 만드세요
             </p>
           </header>
-
-          <LoginForm />
-
-          <div className="mt-4 text-center text-xs text-[var(--color-text)]/60">
-            <p>
-              비밀번호를 잊으셨나요?
-              <Link
-                className="pl-1 text-[var(--color-accent)] underline"
-                href="/reset"
-              >
-                비밀번호 재설정
-              </Link>
-            </p>
-          </div>
+          {children}
         </div>
       </section>
     </main>

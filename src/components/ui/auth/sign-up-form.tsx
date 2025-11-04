@@ -1,14 +1,12 @@
 "use client";
 
-import { loginAction } from "@/app/actions/login.aciton";
-import { useAuthStore } from "@/stores/auth-store";
+import { signUpAction } from "@/app/actions/signup.action";
 import { Loader, Link } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
-export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(loginAction, null);
-  const { setIsLogin } = useAuthStore();
+export default function SignUpForm() {
+  const [state, formAction, isPending] = useActionState(signUpAction, null);
   const router = useRouter();
 
   useEffect(() => {
@@ -18,7 +16,6 @@ export default function LoginForm() {
       return alert(state.error);
     }
 
-    setIsLogin(true);
     router.push("/");
   }, [state]);
 
@@ -66,14 +63,8 @@ export default function LoginForm() {
           type="submit"
           disabled={isPending}
         >
-          {isPending ? <Loader /> : "로그인"}
+          {isPending ? <Loader /> : "계정생성"}
         </button>
-        <Link
-          className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-search)]"
-          href="/signup"
-        >
-          계정 생성
-        </Link>
       </div>
     </form>
   );
