@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
+import { Link } from "lucide-react";
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -78,6 +79,15 @@ export default function AccountForm({ user }: { user: User | null }) {
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
+      </div>
+
+      <div className="mb-4">
+        <label className="mb-2 block text-sm font-medium text-[var(--color-text)]/80">
+          비밀번호
+        </label>
+        <Link href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
+          비밀번호 재설정
+        </Link>
       </div>
 
       <div className="mb-4">

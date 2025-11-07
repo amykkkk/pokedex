@@ -37,6 +37,9 @@ export default function SignUpForm() {
           placeholder="you@example.com"
           autoComplete="email"
         />
+        <Link href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/signup">
+          이메일 확인
+        </Link>
       </div>
 
       <div>
