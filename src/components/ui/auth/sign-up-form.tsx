@@ -1,22 +1,34 @@
 "use client";
 
 import { signUpAction } from "@/app/actions/signup.action";
-import { Loader, Link } from "lucide-react";
+import { Loader } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(signUpAction, null);
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     if (!state) return;
 
     if (!state.status) {
-      return alert(state.error);
+      if (state.data) {
+        setUser({
+          email: state.data.email,
+          password: state.data.password,
+        });
+      }
+      return setError(state.error);
     }
 
-    router.push("/");
+    router.push("/sign-up-success");
   }, [state]);
 
   return (
@@ -32,14 +44,13 @@ export default function SignUpForm() {
           id="email"
           name="email"
           type="email"
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
           required
           className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-search)] px-4 py-2 text-sm transition outline-none placeholder:text-[var(--color-text)]/50 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
           placeholder="you@example.com"
           autoComplete="email"
         />
-        <Link href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/signup">
-          이메일 확인
-        </Link>
       </div>
 
       <div>
@@ -53,6 +64,8 @@ export default function SignUpForm() {
           id="password"
           name="password"
           type="password"
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
           required
           className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-search)] px-4 py-2 text-sm transition outline-none placeholder:text-[var(--color-text)]/50 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
           placeholder="••••••••"
@@ -60,14 +73,37 @@ export default function SignUpForm() {
         />
       </div>
 
+      <div>
+        <label
+          htmlFor="repeat-password"
+          className="mb-2 block text-sm font-medium text-[var(--color-text)]/80"
+        >
+          Repeat Password
+        </label>
+        <input
+          id="repeat-password"
+          name="repeat-password"
+          type="password"
+          required
+          className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-search)] px-4 py-2 text-sm transition outline-none placeholder:text-[var(--color-text)]/50 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+          placeholder="••••••••"
+        />
+      </div>
+
       <div className="mt-2 flex flex-col gap-3">
+        {error && <p className="text-sm text-red-500">{error}</p>}
         <button
           className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white shadow transition hover:brightness-95"
           type="submit"
           disabled={isPending}
         >
-          {isPending ? <Loader /> : "계정생성"}
+          {isPending ? <Loader /> : "Sign up"}
         </button>
+      </div>
+
+      <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
+        Already have an account?&nbsp;
+        <Link href="/login">Login</Link>
       </div>
     </form>
   );

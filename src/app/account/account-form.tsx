@@ -12,7 +12,6 @@ export default function AccountForm({ user }: { user: User | null }) {
   const [profile, setProfile] = useState({
     nickname: "",
     img: "",
-    email: "",
     createdAt: "",
   });
 
@@ -35,7 +34,6 @@ export default function AccountForm({ user }: { user: User | null }) {
       setProfile({
         nickname: data.nickname,
         img: data.avatar_url,
-        email: data.email,
         createdAt: data.created_at,
       });
     };
@@ -75,7 +73,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <input
           id="email"
           type="text"
-          value={profile.email}
+          value={user?.email ?? ""}
           disabled
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
         />
@@ -116,7 +114,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <input
           id="nickname"
           type="text"
-          value={profile.nickname}
+          value={profile.nickname ?? ""}
           onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
           className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:outline-none dark:text-gray-100"
         />
