@@ -57,7 +57,7 @@ export default function Header({ user }: { user: User | null }) {
     setProfileImage("");
 
     if (pathName === "/account") {
-      router.push("/login");
+      router.push("/auth/login");
     }
     router.refresh();
   };
@@ -121,7 +121,7 @@ export default function Header({ user }: { user: User | null }) {
               ) : (
                 <li>
                   <Link
-                    href="/login"
+                    href="/auth/login"
                     className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
                     onClick={() => setOpen(false)}
                   >

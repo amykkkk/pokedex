@@ -103,7 +103,7 @@ export default function SignUpForm() {
 
       <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
         Already have an account?&nbsp;
-        <Link href="/login">Login</Link>
+        <Link href="/auth/login">Login</Link>
       </div>
     </form>
   );

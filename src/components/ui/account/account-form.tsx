@@ -83,7 +83,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         <label className="mb-2 block text-sm font-medium text-[var(--color-text)]/80">
           비밀번호
         </label>
-        <Link href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
+        <Link href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
           비밀번호 재설정
         </Link>
       </div>

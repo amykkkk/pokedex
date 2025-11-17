@@ -41,7 +41,7 @@ export async function signUpAction(_: any, formData: FormData) {
       throw new Error(error.message);
     }
 
-    revalidatePath("/login", "layout");
+    revalidatePath("/auth/login", "layout");
     return { status: true, data: null, error: "" };
   } catch (err) {
     return {

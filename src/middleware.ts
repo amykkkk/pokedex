@@ -36,12 +36,16 @@ export async function middleware(request: NextRequest) {
   // 비로그인 유저 account page
   if (!user && request.nextUrl.pathname.startsWith("/account")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 
   // 로그인 유저 login page
-  if (user && request.nextUrl.pathname.startsWith("/login")) {
+  if (
+    user &&
+    request.nextUrl.pathname.startsWith("/login") &&
+    request.nextUrl.pathname.startsWith("/auth")
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
@@ -51,5 +55,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/account", "/login"],
+  matcher: ["/account", "/auth"],
 };
