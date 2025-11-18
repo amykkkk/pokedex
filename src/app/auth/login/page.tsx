@@ -13,7 +13,7 @@ export default function LoginPage() {
           Sign Up
         </Link>
         <Link
-          href="/auth/reset_pw"
+          href="/auth/reset-pw"
           className="inline-block underline-offset-4 hover:underline"
         >
           Find PassWord

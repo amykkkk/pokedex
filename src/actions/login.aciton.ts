@@ -14,6 +14,7 @@ export async function loginAction(_: any, formData: FormData) {
   if (obj.email === "" || obj.password === "") {
     return {
       status: false,
+      data: obj,
       error: "Email and password are required.",
     };
   }
@@ -26,11 +27,12 @@ export async function loginAction(_: any, formData: FormData) {
     }
 
     revalidatePath("/auth/login", "layout");
-    return { status: true, error: null };
+    return { status: true, data: null, error: "" };
   } catch (err) {
     return {
       status: false,
-      error: err,
+      data: obj,
+      error: `err: ${err}`,
     };
   }
 }

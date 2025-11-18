@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
-import { Link } from "lucide-react";
 import FormInput from "@/components/common/form-input";
+import Link from "next/link";
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -112,9 +112,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       </div>
 
       <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
-        <Link href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
-          비밀번호 재설정
-        </Link>
+        <Link href="/auth/change-pw">비밀번호 재설정</Link>
       </div>
     </div>
   );
