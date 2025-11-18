@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
 import { Link } from "lucide-react";
+import FormInput from "@/components/common/form-input";
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -63,62 +64,31 @@ export default function AccountForm({ user }: { user: User | null }) {
         ⚙️ Account Settings
       </h2>
 
-      <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="text-text mb-1 block text-sm font-semibold"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          type="text"
-          value={user?.email ?? ""}
-          disabled
-          className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
-        />
-      </div>
+      <FormInput
+        label="email"
+        text="Email"
+        id="email"
+        type="text"
+        value={user?.email ?? ""}
+        disabled
+      />
 
-      <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-[var(--color-text)]/80">
-          비밀번호
-        </label>
-        <Link href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
-          비밀번호 재설정
-        </Link>
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor="created_at"
-          className="text-text mb-1 block text-sm font-semibold"
-        >
-          Created At
-        </label>
-        <input
-          id="created_at"
-          type="text"
-          value={profile.createdAt.split("T")[0]}
-          disabled
-          className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:outline-none dark:text-gray-200"
-        />
-      </div>
-
-      <div className="mb-6">
-        <label
-          htmlFor="nickname"
-          className="text-text mb-1 block text-sm font-semibold"
-        >
-          Nickname
-        </label>
-        <input
-          id="nickname"
-          type="text"
-          value={profile.nickname ?? ""}
-          onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-          className="border-border bg-search focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:outline-none dark:text-gray-100"
-        />
-      </div>
+      <FormInput
+        label="created_at"
+        text=" Created At"
+        id="created_at"
+        type="text"
+        value={profile.createdAt.split("T")[0]}
+        disabled
+      />
+      <FormInput
+        label="nickname"
+        text=" Nickname"
+        id="nickname"
+        type="text"
+        value={profile.nickname ?? ""}
+        onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
+      />
 
       <Avatar
         uid={user ? user.id : ""}
@@ -139,6 +109,12 @@ export default function AccountForm({ user }: { user: User | null }) {
         >
           {loading ? "Updating..." : "Update Profile"}
         </button>
+      </div>
+
+      <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
+        <Link href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account/change_pw">
+          비밀번호 재설정
+        </Link>
       </div>
     </div>
   );
