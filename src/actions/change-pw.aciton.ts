@@ -6,31 +6,29 @@ import { revalidatePath } from "next/cache";
 export async function ChangePWAction(_: any, formData: FormData) {
   const supabase = await createServer();
 
-  const obj = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
+  const password = formData.get("password") as string;
+  const repeatPW = formData.get("repeat-password") as string;
 
-  if (obj.email === "" || obj.password === "") {
+  if (password !== repeatPW) {
     return {
       status: false,
-      error: "Email and password are required.",
+      error: "Passwords do not match.",
     };
   }
 
   try {
-    const { error } = await supabase.auth.signInWithPassword(obj);
+    const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
       throw new Error(error.message);
     }
 
-    revalidatePath("/auth/login", "layout");
-    return { status: true, error: null };
+    revalidatePath("/auth/chang-pw", "layout");
+    return { status: true, error: "" };
   } catch (err) {
     return {
       status: false,
-      error: err,
+      error: `err: ${err}`,
     };
   }
 }
