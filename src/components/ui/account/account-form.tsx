@@ -6,6 +6,7 @@ import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -66,6 +67,15 @@ export default function AccountForm({ user }: { user: User | null }) {
         ⚙️ Account Settings
       </h2>
 
+      <Avatar
+        uid={user ? user.id : ""}
+        url={profile.img}
+        size={150}
+        onUpload={(url) => {
+          updateProfile({ img: url });
+        }}
+      />
+
       <FormInput
         label="email"
         text="Email"
@@ -92,16 +102,15 @@ export default function AccountForm({ user }: { user: User | null }) {
         onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
       />
 
-      <Avatar
-        uid={user ? user.id : ""}
-        url={profile.img}
-        size={150}
-        onUpload={(url) => {
-          updateProfile({ img: url });
-        }}
-      />
+      <div className="mt-5 flex flex-wrap items-center justify-between text-xs text-[var(--color-text)]/50">
+        <p className="text-text mb-2 block text-sm font-semibold">Like List</p>
+        <Link href="/account/like">
+          More <ChevronRight size={14} className="inline-block" />
+        </Link>
+        <div className="w-full">list</div>
+      </div>
 
-      <div className="mb-4">
+      <div className="mt-4">
         <button
           className="bg-accent w-full rounded-lg py-2 text-sm font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
           onClick={() =>
