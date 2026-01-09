@@ -14,35 +14,15 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { User } from "@supabase/supabase-js";
-export default function Header({ user }: { user: User | null }) {
+import useCurrentUser from "@/hooks/use-current-user";
+
+export default function Header() {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [open, setOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
   const supabase = createClient();
   const router = useRouter();
   const pathName = usePathname();
-
-  useEffect(() => {
-    if (!user) return;
-
-    const checkLoginStatus = async () => {
-      const {
-        data: profiles,
-        error,
-        status,
-      } = await supabase.from("profiles").select().eq("id", user.id).single();
-
-      if (error && status !== 406) {
-        return console.log(error);
-      }
-
-      if (!profiles) return;
-
-      setProfileImage(profiles.avatar_url);
-    };
-    checkLoginStatus();
-  }, [user]);
+  const user = useCurrentUser();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -54,7 +34,6 @@ export default function Header({ user }: { user: User | null }) {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setOpen(false);
-    setProfileImage("");
 
     if (pathName === "/account") {
       router.push("/auth/login");
@@ -80,11 +59,11 @@ export default function Header({ user }: { user: User | null }) {
 
         <button
           onClick={() => setOpen(!open)}
-          className={`ml-2 overflow-hidden rounded-full transition ${!profileImage && "bg-accent p-1 text-white"} `}
+          className={`ml-2 overflow-hidden rounded-full transition ${!user && "bg-accent p-1 text-white"} `}
         >
-          {profileImage ? (
+          {user?.user_metadata.avatar_url ? (
             <Image
-              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profileImage}`}
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${user?.user_metadata.avatar_url}`}
               alt="Profile Image"
               width={28}
               height={28}

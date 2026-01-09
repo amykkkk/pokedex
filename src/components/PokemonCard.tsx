@@ -1,12 +1,21 @@
+import { Heart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
 type ICardProps = {
   name: string;
   id?: number;
+  isLiked?: boolean;
 };
 
-export default function PokemonCard({ name, id }: ICardProps) {
+export default function PokemonCard({ name, id, isLiked }: ICardProps) {
+  const onClickLike = () => {
+    // if(user){
+    // } else {
+    //   alert("로그인 후 이용 가능합니다!");
+    // }
+  };
+
   const imgUrl =
     `https://img.pokemondb.net/sprites/home/normal/${name}.png` !== undefined
       ? `https://img.pokemondb.net/sprites/home/normal/${name}.png`
@@ -15,8 +24,16 @@ export default function PokemonCard({ name, id }: ICardProps) {
   return (
     <Link href={`/pokemon/${name}`}>
       <div className="group relative overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-tr from-pink-50 to-blue-50 opacity-10 transition-opacity duration-300 group-hover:opacity-20" />
-
+        <button
+          onClick={onClickLike}
+          className="absolute top-4 right-4 z-10 cursor-pointer text-red-600"
+        >
+          {isLiked ? (
+            <Heart size={16} fill="var(--color-red-600)" strokeWidth={0} />
+          ) : (
+            <Heart size={16} />
+          )}
+        </button>
         <img
           src={imgUrl}
           alt={name}

@@ -112,7 +112,7 @@ export default function Home() {
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         <Suspense fallback={<CardLoading limit={ITEMS_PER_PAGE} />}>
           {pokemonList.map((p: any) => (
-            <PokemonCard key={p.name} name={p.name} id={p.id} />
+            <PokemonCard key={p.name} name={p.name} id={p.id} isLiked={false} />
           ))}
         </Suspense>
       </div>

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Header from "@/components/Header";
 import { cookies } from "next/headers";
-import { createServer } from "@/lib/supabase/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,17 +26,13 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const theme = cookieStore.get("theme")?.value || "light";
-  const supabase = await createServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   return (
     <html lang="kr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${theme}`}
       >
-        <Header user={user || null} />
+        <Header />
         {children}
       </body>
     </html>

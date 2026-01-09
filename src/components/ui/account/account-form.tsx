@@ -7,14 +7,23 @@ import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import PokemonCard from "@/components/PokemonCard";
+
+type IProfileType = {
+  nickname: string;
+  img: string;
+  createdAt: string;
+  like: { name: string; id?: number }[];
+};
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<IProfileType>({
     nickname: "",
     img: "",
     createdAt: "",
+    like: [],
   });
 
   useEffect(() => {
@@ -37,6 +46,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         nickname: data.nickname,
         img: data.avatar_url,
         createdAt: data.created_at,
+        like: data.like,
       });
     };
     checkLoginStatus();
@@ -107,7 +117,13 @@ export default function AccountForm({ user }: { user: User | null }) {
         <Link href="/account/like">
           More <ChevronRight size={14} className="inline-block" />
         </Link>
-        <div className="w-full">list</div>
+        <div className="w-full">
+          {profile.like.length === 0
+            ? "There is no liked pokemon."
+            : profile.like.map((p) => (
+                <PokemonCard key={p.name} name={p.name} id={p.id} />
+              ))}
+        </div>
       </div>
 
       <div className="mt-4">
