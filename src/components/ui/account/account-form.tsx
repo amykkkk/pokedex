@@ -8,64 +8,25 @@ import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight, Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/PokemonCard";
+import useCurrentUser from "@/hooks/use-current-user";
 
-type IProfileType = {
-  nickname: string;
-  img: string;
-  createdAt: string;
-  like: { name: string; id?: number }[];
-};
-
-export default function AccountForm({ user }: { user: User | null }) {
+export default function AccountForm() {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<IProfileType>({
-    nickname: "",
-    img: "",
-    createdAt: "",
-    like: [],
-  });
+  const { profile, setProfile } = useCurrentUser();
 
-  const getProfile = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      const { data, error, status } = await supabase
-        .from("profiles")
-        .select()
-        .eq("id", user?.id)
-        .single();
-
-      if (error && status !== 406) {
-        console.log(error);
-        throw error;
-      }
-
-      if (!data) return;
-
-      setProfile({
-        nickname: data.nickname,
-        img: data.avatar_url,
-        createdAt: data.created_at,
-        like: [],
-      });
-    } catch (error) {
-      alert("Error loading user data!");
-    } finally {
-      setLoading(false);
-    }
-  }, [user, supabase]);
-
-  useEffect(() => {
-    getProfile();
-  }, [user, getProfile]);
-
-  async function updateProfile({ name, img }: { name?: string; img?: string }) {
+  async function updateProfile({
+    name,
+    img,
+  }: {
+    name: string | null;
+    img: string | null;
+  }) {
     try {
       setLoading(true);
 
       const { error } = await supabase.from("profiles").upsert({
-        id: user?.id,
+        id: profile.id,
         nickname: name,
         avatar_url: img,
       });
@@ -86,12 +47,12 @@ export default function AccountForm({ user }: { user: User | null }) {
       </h2>
 
       <Avatar
-        uid={user ? user.id : ""}
+        uid={profile.id}
         url={profile.img}
         size={150}
         onUpload={(url) => {
           setProfile({ ...profile, img: url });
-          updateProfile({ img: url });
+          updateProfile({ name: profile.nickname, img: url });
         }}
       />
 
@@ -100,7 +61,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         text="Email"
         id="email"
         type="text"
-        value={user?.email ?? ""}
+        value={profile.email}
         disabled
       />
 
@@ -124,7 +85,9 @@ export default function AccountForm({ user }: { user: User | null }) {
 
         <button
           className="bg-accent mt-2 h-9.5 rounded-lg p-3 font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
-          onClick={() => updateProfile({ name: profile.nickname })}
+          onClick={() =>
+            updateProfile({ img: profile.img, name: profile.nickname })
+          }
           disabled={loading}
         >
           {loading ? <Loader size={12} /> : <Pencil size={12} />}
