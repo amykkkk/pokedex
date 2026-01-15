@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/PokemonCard";
 
 type IProfileType = {
@@ -26,18 +26,19 @@ export default function AccountForm({ user }: { user: User | null }) {
     like: [],
   });
 
-  useEffect(() => {
-    if (!user) return;
+  const getProfile = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    const checkLoginStatus = async () => {
       const { data, error, status } = await supabase
         .from("profiles")
         .select()
-        .eq("id", user.id)
+        .eq("id", user?.id)
         .single();
 
       if (error && status !== 406) {
-        return console.log(error);
+        console.log(error);
+        throw error;
       }
 
       if (!data) return;
@@ -46,13 +47,20 @@ export default function AccountForm({ user }: { user: User | null }) {
         nickname: data.nickname,
         img: data.avatar_url,
         createdAt: data.created_at,
-        like: data.like,
+        like: [],
       });
-    };
-    checkLoginStatus();
-  }, [user]);
+    } catch (error) {
+      alert("Error loading user data!");
+    } finally {
+      setLoading(false);
+    }
+  }, [user, supabase]);
 
-  async function updateProfile({ name, img }: { name?: string; img: string }) {
+  useEffect(() => {
+    getProfile();
+  }, [user, getProfile]);
+
+  async function updateProfile({ name, img }: { name?: string; img?: string }) {
     try {
       setLoading(true);
 
@@ -82,6 +90,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         url={profile.img}
         size={150}
         onUpload={(url) => {
+          setProfile({ ...profile, img: url });
           updateProfile({ img: url });
         }}
       />
@@ -103,16 +112,26 @@ export default function AccountForm({ user }: { user: User | null }) {
         value={profile.createdAt.split("T")[0]}
         disabled
       />
-      <FormInput
-        label="nickname"
-        text=" Nickname"
-        id="nickname"
-        type="text"
-        value={profile.nickname ?? ""}
-        onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-      />
+      <div className="grid grid-cols-[1fr_auto] items-center justify-items-stretch gap-3">
+        <FormInput
+          label="nickname"
+          text=" Nickname"
+          id="nickname"
+          type="text"
+          value={profile.nickname ?? ""}
+          onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
+        />
 
-      <div className="mt-5 flex flex-wrap items-center justify-between text-xs text-[var(--color-text)]/50">
+        <button
+          className="bg-accent mt-2 h-9.5 rounded-lg p-3 font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+          onClick={() => updateProfile({ name: profile.nickname })}
+          disabled={loading}
+        >
+          {loading ? <Loader size={12} /> : <Pencil size={12} />}
+        </button>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between text-xs text-[var(--color-text)]/50">
         <p className="text-text mb-2 block text-sm font-semibold">Like List</p>
         <Link href="/account/like">
           More <ChevronRight size={14} className="inline-block" />
@@ -126,19 +145,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         </div>
       </div>
 
-      <div className="mt-4">
-        <button
-          className="bg-accent w-full rounded-lg py-2 text-sm font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
-          onClick={() =>
-            updateProfile({ name: profile.nickname, img: profile.img })
-          }
-          disabled={loading}
-        >
-          {loading ? "Updating..." : "Update Profile"}
-        </button>
-      </div>
-
-      <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
+      <div className="mt-6 text-center text-xs text-[var(--color-text)]/50">
         <Link href="/auth/change-pw">비밀번호 재설정</Link>
       </div>
     </div>
