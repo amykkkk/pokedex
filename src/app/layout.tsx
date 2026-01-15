@@ -30,7 +30,7 @@ export default async function RootLayout({
   return (
     <html lang="kr">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ${theme}`}
+        className={`${geistSans.variable} ${geistMono.variable} ${theme} mt-14 pt-10`}
       >
         <Header />
         {children}

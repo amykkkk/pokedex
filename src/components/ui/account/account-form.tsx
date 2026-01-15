@@ -41,7 +41,7 @@ export default function AccountForm() {
   }
 
   return (
-    <div className="bg-card border-border mx-auto mt-10 max-w-lg rounded-2xl border p-8 shadow-lg">
+    <div className="bg-card border-border mx-auto max-w-lg rounded-2xl border p-8 shadow-lg">
       <h2 className="text-accent mb-8 text-center text-2xl font-bold">
         ⚙️ Account Settings
       </h2>

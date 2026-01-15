@@ -42,80 +42,78 @@ export default function Header() {
   };
 
   return (
-    <div className="relative z-20 flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-4 backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-900/80">
+    <div className="fixed top-0 z-20 grid w-full grid-cols-[1fr_auto_auto] items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-900/80">
       <h1 className="text-accent text-2xl font-extrabold tracking-tight">
-        Pokédex
+        <Link href="/">Pokédex</Link>
       </h1>
 
-      <div className="relative">
-        <button
-          onClick={toggleTheme}
-          className={`border-border bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
-        >
-          <span className="text-text flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white p-0.5 transition-all duration-300 dark:translate-x-5 dark:bg-black dark:text-white">
-            {theme === "light" ? <Sun /> : <Moon />}
-          </span>
-        </button>
+      <button
+        onClick={toggleTheme}
+        className={`border-border bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
+      >
+        <span className="text-text flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white p-0.5 transition-all duration-300 dark:translate-x-5 dark:bg-black dark:text-white">
+          {theme === "light" ? <Sun /> : <Moon />}
+        </span>
+      </button>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className={`relative ml-2 h-9 w-9 overflow-hidden rounded-full transition ${profile?.img && "bg-accent p-1 text-white"} `}
-        >
-          {profile.isLogin ? (
-            <>
-              {profile.img ? (
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile?.img}`}
-                  alt="Profile Image"
-                  fill
-                />
-              ) : (
-                profile.email.charAt(0).toUpperCase()
-              )}
-            </>
-          ) : (
-            <UserIcon />
-          )}
-        </button>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!profile?.img && "bg-accent text-white"}`}
+      >
+        {profile.isLogin ? (
+          <>
+            {profile.img ? (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile?.img}`}
+                alt="Profile Image"
+                fill
+              />
+            ) : (
+              profile.email.charAt(0).toUpperCase()
+            )}
+          </>
+        ) : (
+          <UserIcon size={18} className="inline-block h-11/12" />
+        )}
+      </button>
 
-        {open && (
-          <div className="animate-fade-in absolute right-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
-            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-              {profile ? (
-                <>
-                  <li>
-                    <Link
-                      href="/account"
-                      className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
-                      onClick={() => setOpen(false)}
-                    >
-                      <UserPen size={16} /> Account
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleSignOut}
-                      className="flex w-full items-center gap-2 px-4 py-2 text-left transition hover:bg-gray-100 dark:hover:bg-zinc-700"
-                    >
-                      <LogOut size={16} /> Sign Out
-                    </button>
-                  </li>
-                </>
-              ) : (
+      {open && (
+        <div className="animate-fade-in absolute top-11/12 right-6 w-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
+          <ul className="min-w-28 py-2 text-xs text-gray-700 dark:text-gray-200">
+            {profile.isLogin ? (
+              <>
                 <li>
                   <Link
-                    href="/auth/login"
+                    href="/account"
                     className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
                     onClick={() => setOpen(false)}
                   >
-                    <LogIn size={16} /> Login
+                    <UserPen size={16} /> Account
                   </Link>
                 </li>
-              )}
-            </ul>
-          </div>
-        )}
-      </div>
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex w-full items-center gap-2 px-4 py-2 text-left transition hover:bg-gray-100 dark:hover:bg-zinc-700"
+                  >
+                    <LogOut size={16} /> Sign Out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link
+                  href="/auth/login"
+                  className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
+                  onClick={() => setOpen(false)}
+                >
+                  <LogIn size={16} /> Login
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

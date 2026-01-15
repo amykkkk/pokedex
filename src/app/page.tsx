@@ -88,7 +88,7 @@ export default function Home() {
   }, [type, search, curPage, sort]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-pink-50 px-6 py-10 sm:px-12 md:px-24">
+    <main className="bg-gradient-to-b from-blue-50 via-white to-pink-50 px-6 sm:px-12 md:px-24">
       <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
         <Suspense
           fallback={

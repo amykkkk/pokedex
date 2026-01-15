@@ -4,7 +4,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] p-6">
+    <main className="flex items-center justify-center bg-[var(--color-bg)] p-6">
       <section className="w-full max-w-md">
         <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-8 shadow-lg">
           <header className="mb-6 text-center">
