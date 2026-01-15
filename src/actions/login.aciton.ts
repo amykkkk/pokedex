@@ -26,7 +26,7 @@ export async function loginAction(_: any, formData: FormData) {
       throw new Error(error.message);
     }
 
-    revalidatePath("/auth/login", "layout");
+    revalidatePath("/", "layout");
     return { status: true, data: null, error: "" };
   } catch (err) {
     return {

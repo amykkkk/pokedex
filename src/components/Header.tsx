@@ -14,15 +14,36 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import useCurrentUser from "@/hooks/use-current-user";
+import { User } from "@supabase/supabase-js";
 
-export default function Header() {
+export default function Header({ user }: { user: User | null }) {
   const [theme, setTheme] = useState(() => getCookie("theme") || "light");
   const [open, setOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState();
   const supabase = createClient();
   const router = useRouter();
   const pathName = usePathname();
-  const { profile } = useCurrentUser();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const checkLoginStatus = async () => {
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (error && status !== 406) {
+        return console.log(error);
+      }
+
+      if (!data) return;
+
+      setAvatarUrl(data.avatar_url);
+    };
+    checkLoginStatus();
+  }, [user]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -58,18 +79,18 @@ export default function Header() {
 
       <button
         onClick={() => setOpen(!open)}
-        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!profile?.img && "bg-accent text-white"}`}
+        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!avatarUrl && "bg-accent text-white"}`}
       >
-        {profile.isLogin ? (
+        {user ? (
           <>
-            {profile.img ? (
+            {avatarUrl ? (
               <Image
-                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile?.img}`}
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarUrl}`}
                 alt="Profile Image"
                 fill
               />
             ) : (
-              profile.email.charAt(0).toUpperCase()
+              user.email && user.email.charAt(0).toUpperCase()
             )}
           </>
         ) : (
@@ -80,7 +101,7 @@ export default function Header() {
       {open && (
         <div className="animate-fade-in absolute top-11/12 right-6 w-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
           <ul className="min-w-28 py-2 text-xs text-gray-700 dark:text-gray-200">
-            {profile.isLogin ? (
+            {user ? (
               <>
                 <li>
                   <Link
@@ -94,7 +115,7 @@ export default function Header() {
                 <li>
                   <button
                     onClick={handleSignOut}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-left transition hover:bg-gray-100 dark:hover:bg-zinc-700"
+                    className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left transition hover:bg-gray-100 dark:hover:bg-zinc-700"
                   >
                     <LogOut size={16} /> Sign Out
                   </button>

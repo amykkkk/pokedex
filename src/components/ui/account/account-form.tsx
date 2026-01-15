@@ -8,12 +8,49 @@ import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight, Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/PokemonCard";
-import useCurrentUser from "@/hooks/use-current-user";
 
-export default function AccountForm() {
+type IProfileType = {
+  nickname: string;
+  img: string;
+  createdAt: string;
+  like: { name: string; id?: number }[];
+};
+
+export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
-  const { profile, setProfile } = useCurrentUser();
+  const [profile, setProfile] = useState<IProfileType>({
+    nickname: "",
+    img: "",
+    createdAt: "",
+    like: [],
+  });
+
+  useEffect(() => {
+    if (!user) return;
+
+    const checkLoginStatus = async () => {
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select()
+        .eq("id", user.id)
+        .single();
+
+      if (error && status !== 406) {
+        return console.log(error);
+      }
+
+      if (!data) return;
+
+      setProfile({
+        nickname: data.nickname,
+        img: data.avatar_url,
+        createdAt: data.created_at,
+        like: [],
+      });
+    };
+    checkLoginStatus();
+  }, [user]);
 
   async function updateProfile({
     name,
@@ -26,7 +63,7 @@ export default function AccountForm() {
       setLoading(true);
 
       const { error } = await supabase.from("profiles").upsert({
-        id: profile.id,
+        id: user?.id,
         nickname: name,
         avatar_url: img,
       });
@@ -47,7 +84,7 @@ export default function AccountForm() {
       </h2>
 
       <Avatar
-        uid={profile.id}
+        uid={user?.id ?? ""}
         url={profile.img}
         size={150}
         onUpload={(url) => {
@@ -61,7 +98,7 @@ export default function AccountForm() {
         text="Email"
         id="email"
         type="text"
-        value={profile.email}
+        value={user?.email ?? ""}
         disabled
       />
 
