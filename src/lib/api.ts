@@ -1,12 +1,44 @@
+export type IPokemon = {
+  name: string;
+  id: number;
+  url?: string;
+};
+
 export const fetchAllPokemon = async () => {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1302`);
   const data = await res.json();
   return data.results;
 };
 
+export type IPokemonDetail = {
+  id: number;
+  name: string;
+  height: number;
+  weight: number;
+  types: Array<{
+    type: {
+      name: string;
+      url: string;
+    };
+  }>;
+  stats: Array<{
+    base_stat: number;
+    effort: number;
+    stat: {
+      name: string;
+      url: string;
+    };
+  }>;
+};
+
 export const fetchPokemonDetail = async (name: string) => {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
   return await res.json();
+};
+
+export type IType = {
+  name: string;
+  value: string;
 };
 
 export const fetchPokemonByType = async (type: string) => {

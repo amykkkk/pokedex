@@ -5,6 +5,8 @@ import {
   fetchAllPokemon,
   fetchPokemonAllTypes,
   fetchPokemonByType,
+  IPokemon,
+  IType,
 } from "@/lib/api";
 import PokemonCard from "@/components/PokemonCard";
 import Search from "@/components/SearchBox";
@@ -22,8 +24,8 @@ const arr = [
 ];
 
 export default function Home() {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [types, setTypes] = useState([]);
+  const [pokemonList, setPokemonList] = useState<IPokemon[]>([]);
+  const [types, setTypes] = useState<IType[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const searchParams = useSearchParams();
   const search = searchParams.get("q") || "";
@@ -35,10 +37,10 @@ export default function Home() {
   useEffect(() => {
     const loadTypes = async () => {
       try {
-        const data = await fetchPokemonAllTypes();
+        const data: IType[] = await fetchPokemonAllTypes();
         const filtered = data
-          .filter((t: any) => t.name !== "unknown" && t.name !== "shadow")
-          .map((t: any) => ({ name: t.name, value: t.name }));
+          .filter((t) => t.name !== "unknown" && t.name !== "shadow")
+          .map((t) => ({ name: t.name, value: t.name }));
 
         setTypes(filtered);
       } catch (err) {
@@ -51,20 +53,18 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = type
+        const data: IPokemon[] = type
           ? await fetchPokemonByType(type)
           : await fetchAllPokemon();
 
         const filtered = data
-          .filter((p: any) =>
-            p.name.toLowerCase().includes(search.toLowerCase()),
-          )
-          .map((p: any) => ({
+          .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+          .map((p) => ({
             name: p.name,
-            id: Number(p.url.split("/")[6]),
+            id: (p.url && Number(p.url.split("/")[6])) || 0,
           }));
 
-        const sorted = filtered.sort((a: any, b: any) =>
+        const sorted = filtered.sort((a, b) =>
           sort === "asc"
             ? a.name.localeCompare(b.name)
             : sort === "desc"
@@ -111,7 +111,7 @@ export default function Home() {
 
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         <Suspense fallback={<CardLoading limit={ITEMS_PER_PAGE} />}>
-          {pokemonList.map((p: any) => (
+          {pokemonList.map((p) => (
             <PokemonCard key={p.name} name={p.name} id={p.id} isLiked={false} />
           ))}
         </Suspense>

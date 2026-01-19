@@ -1,6 +1,10 @@
 import PokemonCard from "@/components/PokemonCard";
 import StatsChart from "@/components/StatsChart";
-import { fetchPokeEvoChain, fetchPokemonDetail } from "@/lib/api";
+import {
+  fetchPokeEvoChain,
+  fetchPokemonDetail,
+  IPokemonDetail,
+} from "@/lib/api";
 
 export default async function PokemonDetail({
   params,
@@ -8,7 +12,7 @@ export default async function PokemonDetail({
   params: { name: string };
 }) {
   const { name } = await params;
-  const data = await fetchPokemonDetail(name);
+  const data: IPokemonDetail = await fetchPokemonDetail(name);
   const evolutions = await fetchPokeEvoChain(name);
 
   const imgUrl =
@@ -52,7 +56,7 @@ export default async function PokemonDetail({
               🔥 타입
             </strong>
             <div className="flex flex-wrap justify-center gap-2">
-              {data.types.map((t: any) => (
+              {data.types.map((t) => (
                 <span
                   key={t.type.name}
                   className="rounded-full bg-gradient-to-r from-blue-200 to-blue-400 px-4 py-1 text-xs font-semibold text-white shadow"

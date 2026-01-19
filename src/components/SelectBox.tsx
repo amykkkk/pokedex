@@ -3,11 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-
-type IOption = {
-  name: string;
-  value: string;
-};
+import { IType } from "@/lib/api";
 
 export default function SelectBox({
   options,
@@ -15,7 +11,7 @@ export default function SelectBox({
   icon,
   title,
 }: {
-  options: IOption[];
+  options: IType[];
   query: string;
   icon?: React.ReactElement;
   title: string;
