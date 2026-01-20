@@ -7,7 +7,7 @@ export default function SearchBox({ placeholder }: { placeholder: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const q = searchParams.get("q");
+  const q = searchParams.get("query");
 
   useEffect(() => {
     setSearch(q || "");
@@ -20,7 +20,7 @@ export default function SearchBox({ placeholder }: { placeholder: string }) {
     if (!search || q === search) return;
 
     const params = new URLSearchParams(searchParams);
-    params.set("q", search);
+    params.set("query", search);
     router.push(`/?${params}`);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

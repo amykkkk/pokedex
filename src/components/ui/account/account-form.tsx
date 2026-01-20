@@ -7,7 +7,7 @@ import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight, Loader, Pencil } from "lucide-react";
-import PokemonCard from "@/components/PokemonCard";
+import PokemonCard from "@/components/common/pokemon-card";
 
 type IProfileType = {
   nickname: string;

@@ -13,7 +13,7 @@ export default function Pagination({
   pageCount: number;
 }) {
   const searchParams = useSearchParams();
-  const p = Number(searchParams.get("p")) || 1;
+  const p = Number(searchParams.get("page")) || 1;
   const router = useRouter();
 
   const totalPages = Math.ceil(totalItems / pageItems);
@@ -26,7 +26,7 @@ export default function Pagination({
 
   const goToPage = (num: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("p", num.toString());
+    params.set("page", num.toString());
     router.push(`/?${params.toString()}`);
   };
 

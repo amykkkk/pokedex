@@ -5,7 +5,14 @@ export type IPokemon = {
 };
 
 export const fetchAllPokemon = async () => {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1302`);
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1302`, {
+    next: {
+      revalidate: 86400, // 24 hours
+    },
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch Pokémon");
+
   const data = await res.json();
   return data.results;
 };
@@ -49,9 +56,19 @@ export const fetchPokemonByType = async (type: string) => {
 };
 
 export const fetchPokemonAllTypes = async () => {
-  const res = await fetch("https://pokeapi.co/api/v2/type");
-  const data = await res.json();
-  return data.results;
+  const res = await fetch("https://pokeapi.co/api/v2/type")
+    .then((response) => {
+      if (!response.ok)
+        console.log("Error fetchPokemonAllTypes:", response.status);
+      return response.json();
+    })
+    .then((data) => data.results as Array<{ name: string; url: string }>);
+
+  const allTypes = res
+    .filter((t) => t.name !== "unknown" && t.name !== "shadow")
+    .map((t) => ({ name: t.name, value: t.name }));
+
+  return allTypes;
 };
 
 export const fetchPokeEvoChain = async (name: string) => {
