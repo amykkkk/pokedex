@@ -1,21 +1,39 @@
 "use client";
 
-import { Heart } from "lucide-react";
+import { toggleLikeAction } from "@/actions/toggle-like.action";
+import { Heart, Loader } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useOptimistic, useTransition } from "react";
 
 type ICardProps = {
   name: string;
-  id?: number;
-  isLiked?: boolean;
+  id: number;
+  isLiked: boolean;
+  isLoggedIn: boolean;
 };
 
-export default function PokemonCard({ name, id, isLiked }: ICardProps) {
+export default function PokemonCard({
+  name,
+  id,
+  isLiked,
+  isLoggedIn,
+}: ICardProps) {
+  const [pending, startTransition] = useTransition();
+  const [optimisticLiked, setOptimisticLiked] = useOptimistic(
+    isLiked,
+    (prev, _action) => !prev,
+  );
+
   const onClickLike = () => {
-    // if(user){
-    // } else {
-    //   alert("로그인 후 이용 가능합니다!");
-    // }
+    if (!isLoggedIn) {
+      alert("로그인이 필요합니다!");
+      return;
+    }
+
+    startTransition(() => {
+      setOptimisticLiked(!optimisticLiked);
+      toggleLikeAction(id, name);
+    });
   };
 
   const imgUrl =
@@ -24,18 +42,19 @@ export default function PokemonCard({ name, id, isLiked }: ICardProps) {
       : `https://upload.wikimedia.org/wikipedia/commons/5/53/Poké_Ball_icon.svg`;
 
   return (
-    <Link href={`/pokemon/${name}`}>
-      <div className="group relative overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
-        <button
-          onClick={onClickLike}
-          className="absolute top-4 right-4 z-10 cursor-pointer text-red-600"
-        >
-          {isLiked ? (
-            <Heart size={16} fill="var(--color-red-600)" strokeWidth={0} />
-          ) : (
-            <Heart size={16} />
-          )}
-        </button>
+    <div className="group relative overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
+      <button
+        onClick={onClickLike}
+        disabled={pending}
+        className="absolute top-4 right-4 z-10 cursor-pointer text-red-600"
+      >
+        {pending ? (
+          <Loader size={12} />
+        ) : (
+          <Heart size={16} className={optimisticLiked ? "fill-red-500" : ""} />
+        )}
+      </button>
+      <Link href={`/pokemon/${name}`}>
         <img
           src={imgUrl}
           alt={name}
@@ -49,7 +68,7 @@ export default function PokemonCard({ name, id, isLiked }: ICardProps) {
             #{id.toString().padStart(3, "0")}
           </p>
         )}
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

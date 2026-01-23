@@ -1,4 +1,4 @@
-import PokemonCard from "@/components/PokemonCard";
+import PokemonCard from "@/components/common/pokemon-card";
 import StatsChart from "@/components/StatsChart";
 import {
   fetchPokeEvoChain,

@@ -88,6 +88,7 @@ export default function Header({ user }: { user: User | null }) {
                 src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarUrl}`}
                 alt="Profile Image"
                 fill
+                sizes="100%"
               />
             ) : (
               user.email && user.email.charAt(0).toUpperCase()
