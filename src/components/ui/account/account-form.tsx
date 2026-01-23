@@ -8,12 +8,13 @@ import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight, Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/common/pokemon-card";
+import { getUserLikes } from "@/lib/get-user-likes";
 
 type IProfileType = {
   nickname: string;
   img: string;
   createdAt: string;
-  like: { name: string; id?: number }[];
+  like: { name: string; id: number }[];
 };
 
 export default function AccountForm({ user }: { user: User | null }) {
@@ -42,11 +43,17 @@ export default function AccountForm({ user }: { user: User | null }) {
 
       if (!data) return;
 
+      const { likesList } = await getUserLikes();
+      const likesArray = Object.entries(likesList).map(([id, value]) => ({
+        name: value.name,
+        id: Number(id),
+      }));
+
       setProfile({
         nickname: data.nickname,
         img: data.avatar_url,
         createdAt: data.created_at,
-        like: [],
+        like: likesArray,
       });
     };
     checkLoginStatus();
@@ -76,6 +83,7 @@ export default function AccountForm({ user }: { user: User | null }) {
       setLoading(false);
     }
   }
+  console.log(profile.like);
 
   return (
     <div className="bg-card border-border mx-auto max-w-lg rounded-2xl border p-8 shadow-lg">
@@ -140,7 +148,12 @@ export default function AccountForm({ user }: { user: User | null }) {
           {profile.like.length === 0
             ? "There is no liked pokemon."
             : profile.like.map((p) => (
-                <PokemonCard key={p.name} name={p.name} id={p.id} />
+                <PokemonCard
+                  key={p.name}
+                  {...p}
+                  isLiked={true}
+                  isLoggedIn={true}
+                />
               ))}
         </div>
       </div>

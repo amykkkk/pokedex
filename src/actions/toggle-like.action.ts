@@ -35,4 +35,6 @@ export async function toggleLikeAction(pokemonId: number, pokemonName: string) {
     user_id: user?.id,
     likes: curLikes,
   });
+
+  revalidatePath("/");
 }
