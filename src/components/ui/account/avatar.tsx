@@ -9,15 +9,17 @@ export default function Avatar({
   uid,
   url,
   size,
+  loading,
   onUpload,
 }: {
   uid: string | null;
   url: string | null;
   size: number;
+  loading: boolean;
   onUpload: (url: string) => void;
 }) {
   const supabase = createClient();
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(loading);
 
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {

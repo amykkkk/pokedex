@@ -37,4 +37,5 @@ export async function toggleLikeAction(pokemonId: number, pokemonName: string) {
   });
 
   revalidatePath("/");
+  revalidatePath("/account");
 }

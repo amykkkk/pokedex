@@ -1,79 +1,40 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { type User } from "@supabase/supabase-js";
 import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
 import { ChevronRight, Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/common/pokemon-card";
-import { getUserLikes } from "@/lib/get-user-likes";
 
-type IProfileType = {
+type IUserInfo = {
+  id: string;
+  email: string;
+  createdAt: string;
   nickname: string;
   img: string;
-  createdAt: string;
   like: { name: string; id: number }[];
 };
 
-export default function AccountForm({ user }: { user: User | null }) {
+export default function AccountForm({ userInfo }: { userInfo: IUserInfo }) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<IProfileType>({
-    nickname: "",
-    img: "",
-    createdAt: "",
-    like: [],
+  const [profile, setProfile] = useState({
+    nickname: userInfo.nickname,
+    img: userInfo.img,
   });
 
-  useEffect(() => {
-    if (!user) return;
-
-    const checkLoginStatus = async () => {
-      const { data, error, status } = await supabase
-        .from("profiles")
-        .select()
-        .eq("id", user.id)
-        .single();
-
-      if (error && status !== 406) {
-        return console.log(error);
-      }
-
-      if (!data) return;
-
-      const { likesList } = await getUserLikes();
-      const likesArray = Object.entries(likesList).map(([id, value]) => ({
-        name: value.name,
-        id: Number(id),
-      }));
-
-      setProfile({
-        nickname: data.nickname,
-        img: data.avatar_url,
-        createdAt: data.created_at,
-        like: likesArray,
-      });
-    };
-    checkLoginStatus();
-  }, [user]);
-
-  async function updateProfile({
-    name,
-    img,
-  }: {
-    name: string | null;
-    img: string | null;
-  }) {
+  const updateProfile = async () => {
     try {
       setLoading(true);
 
       const { error } = await supabase.from("profiles").upsert({
-        id: user?.id,
-        nickname: name,
-        avatar_url: img,
+        id: userInfo.id,
+        nickname: profile.nickname,
+        avatar_url: profile.img,
       });
+
       if (error) throw error;
       alert("Profile updated!");
     } catch (error) {
@@ -82,8 +43,7 @@ export default function AccountForm({ user }: { user: User | null }) {
     } finally {
       setLoading(false);
     }
-  }
-  console.log(profile.like);
+  };
 
   return (
     <div className="bg-card border-border mx-auto max-w-lg rounded-2xl border p-8 shadow-lg">
@@ -92,12 +52,13 @@ export default function AccountForm({ user }: { user: User | null }) {
       </h2>
 
       <Avatar
-        uid={user?.id ?? ""}
+        uid={userInfo.id}
         url={profile.img}
         size={150}
+        loading={loading}
         onUpload={(url) => {
           setProfile({ ...profile, img: url });
-          updateProfile({ name: profile.nickname, img: url });
+          updateProfile();
         }}
       />
 
@@ -106,7 +67,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         text="Email"
         id="email"
         type="text"
-        value={user?.email ?? ""}
+        value={userInfo.email}
         disabled
       />
 
@@ -115,7 +76,7 @@ export default function AccountForm({ user }: { user: User | null }) {
         text=" Created At"
         id="created_at"
         type="text"
-        value={profile.createdAt.split("T")[0]}
+        value={userInfo.createdAt.split("T")[0]}
         disabled
       />
       <div className="grid grid-cols-[1fr_auto] items-center justify-items-stretch gap-3">
@@ -124,30 +85,34 @@ export default function AccountForm({ user }: { user: User | null }) {
           text=" Nickname"
           id="nickname"
           type="text"
-          value={profile.nickname ?? ""}
+          value={profile.nickname}
           onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
         />
 
         <button
-          className="bg-accent mt-2 h-9.5 rounded-lg p-3 font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
-          onClick={() =>
-            updateProfile({ img: profile.img, name: profile.nickname })
-          }
+          className="bg-accent mt-2 h-9.5 cursor-pointer rounded-lg p-3 font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+          onClick={() => updateProfile()}
           disabled={loading}
         >
           {loading ? <Loader size={12} /> : <Pencil size={12} />}
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between text-xs text-[var(--color-text)]/50">
-        <p className="text-text mb-2 block text-sm font-semibold">Like List</p>
-        <Link href="/account/like">
+      <p className="text-text mb-2 flex items-center justify-between text-sm font-semibold">
+        Like List
+        <Link
+          href="/account/like"
+          className="text-xs text-[var(--color-text)]/50"
+        >
           More <ChevronRight size={14} className="inline-block" />
         </Link>
-        <div className="w-full">
-          {profile.like.length === 0
+      </p>
+
+      <div className="w-full overflow-x-auto">
+        <div className="flex min-w-3xl flex-nowrap gap-4 py-4">
+          {userInfo.like.length === 0
             ? "There is no liked pokemon."
-            : profile.like.map((p) => (
+            : userInfo.like.map((p) => (
                 <PokemonCard
                   key={p.name}
                   {...p}
