@@ -3,7 +3,7 @@
 import { createServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function loginAction(_: any, formData: FormData) {
+export async function loginAction(_: unknown, formData: FormData) {
   const supabase = await createServer();
 
   const obj = {

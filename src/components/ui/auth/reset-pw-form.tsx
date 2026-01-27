@@ -3,13 +3,11 @@
 import { ResetPWAction } from "@/actions/reset-pw.aciton";
 import FormInput from "@/components/common/form-input";
 import { Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
 export default function ResetPwForm() {
   const [state, formAction, isPending] = useActionState(ResetPWAction, null);
   const [error, setError] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     if (state && !state.status) {

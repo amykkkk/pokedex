@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Avatar({
   uid,

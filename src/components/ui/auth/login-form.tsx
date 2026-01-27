@@ -2,7 +2,7 @@
 
 import { loginAction } from "@/actions/login.aciton";
 import FormInput from "@/components/common/form-input";
-import { Loader, Link } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
@@ -30,7 +30,7 @@ export default function LoginForm() {
 
     router.refresh();
     router.push("/");
-  }, [state]);
+  }, [router, state]);
 
   return (
     <form className="space-y-5" action={formAction}>

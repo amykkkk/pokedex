@@ -4,7 +4,6 @@ import { signUpAction } from "@/actions/signup.action";
 import FormInput from "@/components/common/form-input";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
 export default function SignUpForm() {
@@ -14,7 +13,6 @@ export default function SignUpForm() {
     password: "",
   });
   const [error, setError] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     if (state && !state.status) {

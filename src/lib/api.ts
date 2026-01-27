@@ -52,7 +52,7 @@ export const fetchPokemonByType = async (type: string) => {
   const res = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
   const data = await res.json();
 
-  return data.pokemon.map((p: any) => p.pokemon);
+  return data.pokemon.map((p: { pokemon: IPokemon }) => p.pokemon);
 };
 
 export const fetchPokemonAllTypes = async () => {
@@ -80,9 +80,14 @@ export const fetchPokeEvoChain = async (name: string) => {
 
   const evoRes = await fetch(speciesRes).then((res) => res.json());
 
-  let evoChain: string[] = [];
+  const evoChain: string[] = [];
 
-  const evoNames = (obj: any) => {
+  type EvolutionChainLink = {
+    species: { name: string };
+    evolves_to: EvolutionChainLink[];
+  };
+
+  const evoNames = (obj: EvolutionChainLink) => {
     if (!obj) return evoChain;
     evoChain.push(obj.species.name);
 

@@ -17,7 +17,7 @@ export default function ChangePWForm() {
       return setError(state.error);
     }
     router.push("/");
-  }, [state]);
+  }, [state, router]);
 
   return (
     <form className="space-y-5" action={formAction}>

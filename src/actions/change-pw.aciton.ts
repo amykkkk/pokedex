@@ -3,7 +3,7 @@
 import { createServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function ChangePWAction(_: any, formData: FormData) {
+export async function ChangePWAction(_: unknown, formData: FormData) {
   const supabase = await createServer();
 
   const password = formData.get("password") as string;

@@ -21,7 +21,7 @@ export default function PokemonCard({
   const [pending, startTransition] = useTransition();
   const [optimisticLiked, setOptimisticLiked] = useOptimistic(
     isLiked,
-    (prev, _action) => !prev,
+    (prev) => !prev,
   );
 
   const onClickLike = () => {
