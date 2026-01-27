@@ -9,7 +9,7 @@ import {
 export default async function PokemonDetail({
   params,
 }: {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }) {
   const { name } = await params;
   const data: IPokemonDetail = await fetchPokemonDetail(name);
