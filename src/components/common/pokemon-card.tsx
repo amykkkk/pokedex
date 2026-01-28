@@ -42,11 +42,11 @@ export default function PokemonCard({
       : `https://upload.wikimedia.org/wikipedia/commons/5/53/Poké_Ball_icon.svg`;
 
   return (
-    <div className="group bg-card relative overflow-hidden rounded-2xl p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
+    <div className="group bg-card border-border relative overflow-hidden rounded-xl border p-4">
       <button
         onClick={onClickLike}
         disabled={pending}
-        className="absolute top-4 right-4 z-10 cursor-pointer text-red-600"
+        className="absolute top-4 right-4 z-1 cursor-pointer text-red-600"
       >
         {pending ? (
           <Loader size={12} className="animate-spin" />
@@ -60,11 +60,11 @@ export default function PokemonCard({
           alt={name}
           className="mx-auto h-24 w-24 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110"
         />
-        <h3 className="mt-4 text-center text-lg font-bold text-gray-800 capitalize">
+        <h3 className="text-foreground mt-4 text-center font-medium capitalize">
           {name}
         </h3>
         {id && (
-          <p className="mt-1 text-center text-sm text-gray-400">
+          <p className="text-text mt-1 text-center text-sm">
             #{id.toString().padStart(3, "0")}
           </p>
         )}

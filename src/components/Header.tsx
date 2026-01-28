@@ -70,16 +70,18 @@ export default function Header({ user }: { user: User | null }) {
 
       <button
         onClick={toggleTheme}
-        className={`bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
+        className={`bg-bg h-5.5 w-10 rounded-full border transition-all duration-300`}
       >
-        <span className="text-text flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white p-0.5 transition-all duration-300 dark:translate-x-5 dark:bg-black dark:text-white">
+        <span
+          className={`text-foreground bg-card border-border flex h-4.5 w-4.5 items-center justify-center rounded-full border p-0.5 transition-all duration-300 ${theme === "dark" && "translate-x-5"}`}
+        >
           {theme === "light" ? <Sun /> : <Moon />}
         </span>
       </button>
 
       <button
         onClick={() => setOpen(!open)}
-        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!avatarUrl && "bg-primary text-white"}`}
+        className={`bg-primary text-primary-foreground relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition`}
       >
         {user ? (
           <>
@@ -100,14 +102,14 @@ export default function Header({ user }: { user: User | null }) {
       </button>
 
       {open && (
-        <div className="animate-fade-in absolute top-11/12 right-6 w-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
-          <ul className="min-w-28 py-2 text-xs text-gray-700 dark:text-gray-200">
+        <div className="animate-fade-in border-input bg-bg absolute top-11/12 right-6 w-auto rounded-lg border shadow-lg">
+          <ul className="text-foreground min-w-28 px-1 py-2 text-xs">
             {user ? (
               <>
                 <li>
                   <Link
                     href="/account"
-                    className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
+                    className="hover:bg-card flex items-center gap-2 pl-1.5 leading-8 transition"
                     onClick={() => setOpen(false)}
                   >
                     <UserPen size={16} /> Account
@@ -126,7 +128,7 @@ export default function Header({ user }: { user: User | null }) {
               <li>
                 <Link
                   href="/auth/login"
-                  className="flex items-center gap-2 px-4 py-2 transition hover:bg-gray-100 dark:hover:bg-zinc-700"
+                  className="hover:bg-card flex items-center gap-2 rounded-xl pl-1.5 leading-8 transition"
                   onClick={() => setOpen(false)}
                 >
                   <LogIn size={16} /> Login

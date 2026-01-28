@@ -32,10 +32,10 @@ export default function SelectBox({
   };
 
   return (
-    <div className="relative w-32 text-sm font-medium text-gray-800">
+    <div className="text-foreground relative w-[calc(50%-8px)] text-sm md:max-w-32">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-xl border border-gray-300 bg-white px-4 py-2 shadow-sm transition-all duration-200 hover:shadow-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        className="border-input flex h-8 w-full items-center justify-between gap-1.5 rounded-lg border bg-transparent py-2 pr-2 pl-2.5"
       >
         {curQuery
           ? options.find(({ value }) => value === curQuery)?.name
@@ -45,6 +45,7 @@ export default function SelectBox({
           icon
         ) : (
           <ChevronDown
+            size={14}
             className={`transition-transform duration-200 ${
               isOpen ? "rotate-180" : ""
             }`}
@@ -53,7 +54,7 @@ export default function SelectBox({
       </button>
 
       <ul
-        className={`absolute z-10 mt-1 max-h-50 w-full overflow-y-scroll rounded-xl border border-gray-200 bg-white py-1 shadow-lg transition-all duration-200 ${
+        className={`border-input bg-bg absolute z-10 mt-1 max-h-50 w-full overflow-y-scroll rounded-lg border px-1 py-2 shadow-lg transition-all duration-200 ${
           isOpen
             ? "visible scale-100 opacity-100"
             : "invisible scale-95 opacity-0"
@@ -63,7 +64,7 @@ export default function SelectBox({
           <li
             key={list.name}
             onClick={() => onSelectChange(list.value)}
-            className="cursor-pointer rounded-lg px-4 py-2 transition-colors duration-150 hover:bg-blue-100"
+            className="hover:bg-card cursor-pointer rounded-xl pl-1.5 leading-8 capitalize transition-colors duration-150"
           >
             {list.name}
           </li>

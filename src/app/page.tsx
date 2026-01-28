@@ -16,7 +16,7 @@ export default async function Page({
 
   return (
     <main className="px-6 sm:px-12 md:px-24">
-      <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
+      <div className="mb-6 flex flex-row flex-wrap items-center gap-4 md:flex-nowrap">
         <SearchBox placeholder="포켓몬 이름 검색" />
         <SelectBox options={types} query={"type"} title={"Type"} />
 
@@ -29,7 +29,7 @@ export default async function Page({
           ]}
           query={"sort"}
           title={"Sort"}
-          icon={<SlidersHorizontal />}
+          icon={<SlidersHorizontal size={14} />}
         />
       </div>
 
