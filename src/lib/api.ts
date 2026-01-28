@@ -80,16 +80,19 @@ export const fetchPokeEvoChain = async (name: string) => {
 
   const evoRes = await fetch(speciesRes).then((res) => res.json());
 
-  const evoChain: string[] = [];
+  const evoChain = [] as Array<{ name: string; id: number }>;
 
-  type EvolutionChainLink = {
-    species: { name: string };
-    evolves_to: EvolutionChainLink[];
+  type IEvolutionType = {
+    species: { name: string; url: string };
+    evolves_to: IEvolutionType[];
   };
 
-  const evoNames = (obj: EvolutionChainLink) => {
+  const evoNames = (obj: IEvolutionType) => {
     if (!obj) return evoChain;
-    evoChain.push(obj.species.name);
+    evoChain.push({
+      name: obj.species.name,
+      id: Number(obj.species.url.split("/")[6]),
+    });
 
     if (obj.evolves_to && obj.evolves_to.length > 0) {
       return evoNames(obj.evolves_to[0]);

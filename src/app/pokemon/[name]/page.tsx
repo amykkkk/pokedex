@@ -83,9 +83,9 @@ export default async function PokemonDetail({
             <div className="flex flex-wrap gap-4">
               {evolutions.map((evo) => (
                 <PokemonCard
-                  key={evo}
-                  name={evo}
-                  id={0}
+                  key={evo.name}
+                  name={evo.name}
+                  id={evo.id}
                   isLiked={false}
                   isLoggedIn={false}
                 />
