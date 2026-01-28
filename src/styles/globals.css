@@ -14,11 +14,12 @@
 
 .dark {
   --primary: #171717;
-  --bg: #fff;
-  --foreground: #0a0a0a;
-  --text: #737373;
-  --card: #f8f8f8;
-  --border: #e5e5e5;
+  --bg: #0a0a0a;
+  --foreground: #fafafa;
+  --text: #a1a1a1;
+  --card: #161616;
+  --input: #ffffff26;
+  --border: #ffffff1a;
 }
 
 @theme {
