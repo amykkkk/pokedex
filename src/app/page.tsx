@@ -15,7 +15,7 @@ export default async function Page({
   const types = await fetchPokemonAllTypes();
 
   return (
-    <main className="bg-gradient-to-b from-blue-50 via-white to-pink-50 px-6 sm:px-12 md:px-24">
+    <main className="px-6 sm:px-12 md:px-24">
       <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
         <SearchBox placeholder="포켓몬 이름 검색" />
         <SelectBox options={types} query={"type"} title={"Type"} />

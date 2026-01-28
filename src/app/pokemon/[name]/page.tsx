@@ -22,7 +22,7 @@ export default async function PokemonDetail({
       : `https://upload.wikimedia.org/wikipedia/commons/5/53/Poké_Ball_icon.svg`;
 
   return (
-    <main className="bg-gradient-to-br from-yellow-50 to-white p-6 md:p-10">
+    <main className="p-6 md:p-10">
       <div className="mx-auto flex max-w-4xl flex-col gap-10 rounded-3xl bg-white p-8 shadow-lg md:flex-row md:p-12">
         {/* 좌측: 이미지 + 기본정보 */}
         <div className="flex flex-col items-center md:w-1/3">

@@ -63,14 +63,14 @@ export default function Header({ user }: { user: User | null }) {
   };
 
   return (
-    <div className="fixed top-0 z-20 grid w-full grid-cols-[1fr_auto_auto] items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-900/80">
-      <h1 className="text-accent text-2xl font-extrabold tracking-tight">
+    <div className="bg-bg fixed top-0 z-20 grid w-full grid-cols-[1fr_auto_auto] items-center justify-between px-6 py-3">
+      <h1 className="text-2xl font-extrabold tracking-tight">
         <Link href="/">Pokédex</Link>
       </h1>
 
       <button
         onClick={toggleTheme}
-        className={`border-border bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
+        className={`bg-bg h-5.5 w-10 rounded-full border transition-all duration-300 dark:bg-zinc-700`}
       >
         <span className="text-text flex h-4.5 w-4.5 items-center justify-center rounded-full bg-white p-0.5 transition-all duration-300 dark:translate-x-5 dark:bg-black dark:text-white">
           {theme === "light" ? <Sun /> : <Moon />}
@@ -79,7 +79,7 @@ export default function Header({ user }: { user: User | null }) {
 
       <button
         onClick={() => setOpen(!open)}
-        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!avatarUrl && "bg-accent text-white"}`}
+        className={`relative ml-2 h-8 w-8 cursor-pointer overflow-hidden rounded-full transition ${!avatarUrl && "bg-primary text-white"}`}
       >
         {user ? (
           <>

@@ -3,30 +3,32 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --color-accent: oklch(0.72 0.11 178);
-  --color-bg: oklch(0.96 0 0);
-  --color-card: oklch(1 0 0);
-  --color-border: oklch(0.85 0 0);
-  --color-text: oklch(0.3 0.03 80);
-  --color-search: oklch(1 0 0);
+  --primary: #171717;
+  --bg: #fff;
+  --foreground: #0a0a0a;
+  --text: #737373;
+  --card: #f8f8f8;
+  --input: #e5e5e5;
+  --border: #e5e5e5;
 }
 
 .dark {
-  --color-accent: oklch(0.7 0.13 178);
-  --color-bg: oklch(0.22 0.02 250);
-  --color-card: oklch(0.26 0.02 250);
-  --color-border: oklch(0.35 0.03 260);
-  --color-text: oklch(0.95 0.02 90);
-  --color-search: oklch(0.3 0.02 260);
+  --primary: #171717;
+  --bg: #fff;
+  --foreground: #0a0a0a;
+  --text: #737373;
+  --card: #f8f8f8;
+  --border: #e5e5e5;
 }
 
 @theme {
-  --color-accent: var(--color-accent);
-  --color-bg: var(--color-bg);
-  --color-card: var(--color-card);
-  --color-border: var(--color-border);
-  --color-text: var(--color-text);
-  --color-search: var(--color-search);
+  --color-primary: var(--primary);
+  --color-bg: var(--bg);
+  --color-foreground: var(--foreground);
+  --color-text: var(--text);
+  --color-card: var(--card);
+  --color-input: var(--input);
+  --color-border: var(--border);
 
   --animate-shimmer: shimmer 4s infinite linear;
   @keyframes shimmer {
@@ -58,10 +60,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--color-primary);
   border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
 }

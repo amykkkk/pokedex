@@ -43,11 +43,11 @@ export default function ChangePWForm() {
       <div className="mb-4 flex flex-col gap-3">
         {error && <p className="text-sm text-red-500">{error}</p>}
         <button
-          className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white shadow transition hover:brightness-95"
+          className="bg-primary flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow transition hover:brightness-95"
           type="submit"
           disabled={isPending}
         >
-          {isPending ? <Loader /> : "Update Password"}
+          {isPending ? <Loader className="animate-spin" /> : "Update Password"}
         </button>
       </div>
     </form>

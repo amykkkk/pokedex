@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <>
       <LoginForm />
-      <div className="mt-5 text-center text-xs text-[var(--color-text)]/50">
+      <div className="text-text mt-5 text-center text-xs">
         <Link
           className="mr-3 inline-block underline-offset-4 hover:underline"
           href="/auth/signup"

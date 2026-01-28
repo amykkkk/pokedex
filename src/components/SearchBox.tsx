@@ -30,7 +30,7 @@ export default function SearchBox({ placeholder }: { placeholder: string }) {
   };
 
   return (
-    <div className="relative mr-auto w-full max-w-xl md:w-1/2">
+    <div className="relative mr-auto w-full max-w-xl">
       <input
         type="text"
         className="peer w-full rounded-full border border-gray-300 bg-white py-3 pr-14 pl-5 text-base text-gray-800 placeholder-gray-400 shadow-md focus:border-red-400 focus:ring-2 focus:ring-red-300 focus:outline-none"

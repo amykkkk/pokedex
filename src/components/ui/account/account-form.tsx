@@ -46,7 +46,7 @@ export default function AccountForm({ userInfo }: { userInfo: IUserInfo }) {
   };
 
   return (
-    <div className="bg-card border-border mx-auto max-w-lg rounded-2xl border p-8 shadow-lg">
+    <div className="bg-card mx-auto max-w-lg rounded-2xl border p-8 shadow-lg">
       <h2 className="text-accent mb-8 text-center text-2xl font-bold">
         ⚙️ Account Settings
       </h2>
@@ -94,16 +94,17 @@ export default function AccountForm({ userInfo }: { userInfo: IUserInfo }) {
           onClick={() => updateProfile()}
           disabled={loading}
         >
-          {loading ? <Loader size={12} /> : <Pencil size={12} />}
+          {loading ? (
+            <Loader size={12} className="animate-spin" />
+          ) : (
+            <Pencil size={12} />
+          )}
         </button>
       </div>
 
       <p className="text-text mb-2 flex items-center justify-between text-sm font-semibold">
         Like List
-        <Link
-          href="/account/like"
-          className="text-xs text-[var(--color-text)]/50"
-        >
+        <Link href="/account/like" className="text-text text-xs">
           More <ChevronRight size={14} className="inline-block" />
         </Link>
       </p>
@@ -123,7 +124,7 @@ export default function AccountForm({ userInfo }: { userInfo: IUserInfo }) {
         </div>
       </div>
 
-      <div className="mt-6 text-center text-xs text-[var(--color-text)]/50">
+      <div className="text-text mt-6 text-center text-xs">
         <Link href="/auth/change-pw">비밀번호 재설정</Link>
       </div>
     </div>

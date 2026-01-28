@@ -14,7 +14,7 @@ export default function FormInput({ label, text, ...props }: IInput) {
         {text}
       </label>
       <input
-        className="border-border bg-search placeholder:text-text/50 focus:border-accent focus:ring-accent/50 w-full rounded-lg border px-3 py-2 text-sm text-gray-600 transition outline-none focus:ring-2 dark:text-gray-200"
+        className="placeholder:text-text/50 focus:border-primary w-full rounded-lg border px-3 py-2 text-sm text-gray-600 transition outline-none"
         {...props}
       />
     </div>

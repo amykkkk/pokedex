@@ -42,14 +42,14 @@ export default function PokemonCard({
       : `https://upload.wikimedia.org/wikipedia/commons/5/53/Poké_Ball_icon.svg`;
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
+    <div className="group bg-card relative overflow-hidden rounded-2xl p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
       <button
         onClick={onClickLike}
         disabled={pending}
         className="absolute top-4 right-4 z-10 cursor-pointer text-red-600"
       >
         {pending ? (
-          <Loader size={12} />
+          <Loader size={12} className="animate-spin" />
         ) : (
           <Heart size={16} className={optimisticLiked ? "fill-red-500" : ""} />
         )}
