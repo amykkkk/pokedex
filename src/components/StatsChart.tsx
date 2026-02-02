@@ -32,8 +32,12 @@ export default function StatsChart({ stats }: { stats: IStats[] }) {
         ticks: {
           stepSize: 20,
           showLabelBackdrop: false,
+          color: "rgba(255, 99, 132, 0.2)",
         },
         beginAtZero: true,
+        grid: {
+          color: "rgba(255, 99, 132, 0.2)",
+        },
       },
     },
     plugins: {
