@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Avatar from "./avatar";
 import FormInput from "@/components/common/form-input";
 import Link from "next/link";
-import { ChevronRight, Loader, Pencil } from "lucide-react";
+import { Loader, Pencil } from "lucide-react";
 import PokemonCard from "@/components/common/pokemon-card";
 
 type IUserInfo = {
@@ -102,12 +102,7 @@ export default function AccountForm({ userInfo }: { userInfo: IUserInfo }) {
         </button>
       </div>
 
-      <p className="text-text mb-2 flex items-center justify-between text-sm font-semibold">
-        Like List
-        <Link href="/account/like" className="text-text text-xs">
-          More <ChevronRight size={14} className="inline-block" />
-        </Link>
-      </p>
+      <p className="text-text mb-2 text-sm font-semibold">Like List</p>
 
       <div className="w-full overflow-x-auto">
         <div className="flex min-w-3xl flex-nowrap gap-4 py-4">
